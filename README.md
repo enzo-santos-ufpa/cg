@@ -9,7 +9,7 @@ A linguagem escolhida para as implementações é o [Go](https://go.dev).
 Para utilizar este projeto, é necessário ter o Go >= 1.22 instalado ([link](https://go.dev/doc/install)):
 
 ```shell
-go version
+$ go version
 ```
 
 ```none
@@ -19,14 +19,14 @@ go version go1.22.0 windows/amd64
 Clone este repositório:
 
 ```shell
-git clone https://github.com/enzo-santos-ufpa/cg
-cd cg
+$ git clone https://github.com/enzo-santos-ufpa/cg
+$ cd cg
 ```
 
 Execute os testes:
 
 ```shell
-go test ./...
+$ go test ./...
 ```
 
 ```none
