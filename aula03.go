@@ -1,13 +1,13 @@
 package ufpa_cg
 
 type AlgoritmoBresenham struct {
-	algoritmo *AlgoritmoBresenham1Octante
+	algoritmo AlgoritmoLinha
 	trocaX    bool
 	trocaY    bool
 	trocaXY   bool
 }
 
-func NewAlgoritmoBresenham(p1, p2 Ponto) *AlgoritmoBresenham {
+func NewAlgoritmoBresenham(p1, p2 Ponto) AlgoritmoLinha {
 	var trocaX, trocaY, trocaXY bool
 	m := float64(p2.Y-p1.Y) / float64(p2.X-p1.X)
 	pA := p1

@@ -13,7 +13,7 @@ type AlgoritmoBruto struct {
 	x int
 }
 
-func NewAlgoritmoBruto(p1, p2 Ponto) *AlgoritmoBruto {
+func NewAlgoritmoBruto(p1, p2 Ponto) AlgoritmoLinha {
 	return &AlgoritmoBruto{
 		PontoInicial: p1,
 		PontoFinal:   p2,
@@ -61,7 +61,7 @@ type AlgoritmoBresenham1Octante struct {
 	pontoAtual Ponto
 }
 
-func NewAlgoritmoBresenham1Octante(p1, p2 Ponto) *AlgoritmoBresenham1Octante {
+func NewAlgoritmoBresenham1Octante(p1, p2 Ponto) AlgoritmoLinha {
 	m := float64(p2.Y-p1.Y) / float64(p2.X-p1.X)
 	return &AlgoritmoBresenham1Octante{
 		PontoInicial: p1,
