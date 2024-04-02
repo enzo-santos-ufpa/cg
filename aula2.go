@@ -82,7 +82,7 @@ func (a *AlgoritmoBresenham) Move() bool {
 	}
 	a.pontoAtual = Ponto{X: a.x, Y: a.y}
 
-	if a.e >= 0 {
+	if a.e > 0 {
 		a.y++
 		a.e--
 	}
