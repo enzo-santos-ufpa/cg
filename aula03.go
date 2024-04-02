@@ -9,7 +9,7 @@ type AlgoritmoBresenham struct {
 
 func NewAlgoritmoBresenham(p1, p2 Ponto) AlgoritmoLinha {
 	var trocaX, trocaY, trocaXY bool
-	m := float64(p2.Y-p1.Y) / float64(p2.X-p1.X)
+	m := CoeficienteLinear(p1, p2)
 	pA := p1
 	pB := p2
 	if m > 1 || m < -1 {

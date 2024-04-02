@@ -19,7 +19,7 @@ func NewAlgoritmoBruto(p1, p2 Ponto) AlgoritmoLinha {
 		PontoFinal:   p2,
 
 		x: p1.X,
-		m: float64(p2.Y-p1.Y) / float64(p2.X-p1.X),
+		m: CoeficienteLinear(p1, p2),
 	}
 }
 
@@ -62,7 +62,7 @@ type AlgoritmoBresenham1Octante struct {
 }
 
 func NewAlgoritmoBresenham1Octante(p1, p2 Ponto) AlgoritmoLinha {
-	m := float64(p2.Y-p1.Y) / float64(p2.X-p1.X)
+	m := CoeficienteLinear(p1, p2)
 	return &AlgoritmoBresenham1Octante{
 		PontoInicial: p1,
 		PontoFinal:   p2,
