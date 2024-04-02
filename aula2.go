@@ -4,11 +4,6 @@ import (
 	"math"
 )
 
-type Ponto struct {
-	X int
-	Y int
-}
-
 type AlgoritmoBruto struct {
 	PontoInicial Ponto
 	PontoFinal   Ponto
