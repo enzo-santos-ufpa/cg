@@ -1,8 +1,9 @@
 package ufpa_cg
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAlgoritmoBresenham2_1(t *testing.T) {
