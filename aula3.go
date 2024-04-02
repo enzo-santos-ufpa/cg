@@ -1,10 +1,10 @@
 package ufpa_cg
 
 type AlgoritmoBresenham struct {
-	Algoritmo *AlgoritmoBresenham1Octante
-	TrocaX    bool
-	TrocaY    bool
-	TrocaXY   bool
+	algoritmo *AlgoritmoBresenham1Octante
+	trocaX    bool
+	trocaY    bool
+	trocaXY   bool
 }
 
 func NewAlgoritmoBresenham(p1, p2 Ponto) *AlgoritmoBresenham {
@@ -28,26 +28,26 @@ func NewAlgoritmoBresenham(p1, p2 Ponto) *AlgoritmoBresenham {
 		trocaY = true
 	}
 	return &AlgoritmoBresenham{
-		Algoritmo: NewAlgoritmoBresenham1Octante(pA, pB),
-		TrocaX:    trocaX,
-		TrocaY:    trocaY,
-		TrocaXY:   trocaXY,
+		algoritmo: NewAlgoritmoBresenham1Octante(pA, pB),
+		trocaX:    trocaX,
+		trocaY:    trocaY,
+		trocaXY:   trocaXY,
 	}
 }
 
 func (a *AlgoritmoBresenham) Move() bool {
-	return a.Algoritmo.Move()
+	return a.algoritmo.Move()
 }
 
 func (a *AlgoritmoBresenham) PontoAtual() Ponto {
-	ponto := a.Algoritmo.PontoAtual()
-	if a.TrocaX {
+	ponto := a.algoritmo.PontoAtual()
+	if a.trocaX {
 		ponto = Ponto{X: -ponto.X, Y: ponto.Y}
 	}
-	if a.TrocaY {
+	if a.trocaY {
 		ponto = Ponto{X: ponto.X, Y: -ponto.Y}
 	}
-	if a.TrocaXY {
+	if a.trocaXY {
 		ponto = Ponto{X: ponto.Y, Y: ponto.X}
 	}
 	return ponto
