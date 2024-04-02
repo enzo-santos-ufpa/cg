@@ -48,7 +48,7 @@ func (a *AlgoritmoBruto) PontoAtual() Ponto {
 	}
 }
 
-type AlgoritmoBresenham struct {
+type AlgoritmoBresenham1Octante struct {
 	PontoInicial Ponto
 	PontoFinal   Ponto
 
@@ -61,9 +61,9 @@ type AlgoritmoBresenham struct {
 	pontoAtual Ponto
 }
 
-func NewAlgoritmoBresenham(p1, p2 Ponto) *AlgoritmoBresenham {
+func NewAlgoritmoBresenham1Octante(p1, p2 Ponto) *AlgoritmoBresenham1Octante {
 	m := float64(p2.Y-p1.Y) / float64(p2.X-p1.X)
-	return &AlgoritmoBresenham{
+	return &AlgoritmoBresenham1Octante{
 		PontoInicial: p1,
 		PontoFinal:   p2,
 
@@ -76,7 +76,7 @@ func NewAlgoritmoBresenham(p1, p2 Ponto) *AlgoritmoBresenham {
 	}
 }
 
-func (a *AlgoritmoBresenham) Move() bool {
+func (a *AlgoritmoBresenham1Octante) Move() bool {
 	if a.x > a.PontoFinal.X {
 		return false
 	}
@@ -91,6 +91,6 @@ func (a *AlgoritmoBresenham) Move() bool {
 	return true
 }
 
-func (a *AlgoritmoBresenham) PontoAtual() Ponto {
+func (a *AlgoritmoBresenham1Octante) PontoAtual() Ponto {
 	return a.pontoAtual
 }

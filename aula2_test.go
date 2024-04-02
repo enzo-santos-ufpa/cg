@@ -24,8 +24,8 @@ func TestAlgoritmoBruto(t *testing.T) {
 	assert.Equal(t, Ponto{X: 5, Y: 3}, algoritmo.PontoAtual())
 }
 
-func TestAlgoritmoBresenham(t *testing.T) {
-	algoritmo := NewAlgoritmoBresenham(Ponto{X: 0, Y: 0}, Ponto{X: 5, Y: 3})
+func TestAlgoritmoBresenham1Octante(t *testing.T) {
+	algoritmo := NewAlgoritmoBresenham1Octante(Ponto{X: 0, Y: 0}, Ponto{X: 5, Y: 3})
 	assert.True(t, algoritmo.Move())
 	assert.Equal(t, Ponto{X: 0, Y: 0}, algoritmo.PontoAtual())
 	assert.True(t, algoritmo.Move())
