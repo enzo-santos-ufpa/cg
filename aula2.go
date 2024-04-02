@@ -47,7 +47,10 @@ func (a *AlgoritmoBruto) PontoAtual() Ponto {
 	//
 	// Definindo (xa, ya) como a.PontoInicial, portanto
 	//     yb = y0 + m*(xb-x0)
-	return Ponto{X: x, Y: a.PontoInicial.Y + int(math.Round(a.m*float64(x-a.PontoInicial.X)))}
+	return Ponto{
+		X: x,
+		Y: a.PontoInicial.Y + int(math.Round(a.m*float64(x-a.PontoInicial.X))),
+	}
 }
 
 type AlgoritmoBresenham struct {
