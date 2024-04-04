@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAlgoritmoBresenham2_1(t *testing.T) {
+func TestAlgoritmoBresenham_1(t *testing.T) {
 	algoritmo := NewAlgoritmoBresenham(Ponto{X: 0, Y: 3}, Ponto{X: 3, Y: 9})
 	assert.True(t, algoritmo.Move())
 	assert.Equal(t, Ponto{X: 0, Y: 3}, algoritmo.PontoAtual())
@@ -26,7 +26,7 @@ func TestAlgoritmoBresenham2_1(t *testing.T) {
 	assert.Equal(t, Ponto{X: 3, Y: 9}, algoritmo.PontoAtual())
 }
 
-func TestAlgoritmoBresenham2_2(t *testing.T) {
+func TestAlgoritmoBresenham_2(t *testing.T) {
 	algoritmo := NewAlgoritmoBresenham(Ponto{X: 0, Y: 0}, Ponto{X: 2, Y: 5})
 	assert.True(t, algoritmo.Move())
 	assert.Equal(t, Ponto{X: 0, Y: 0}, algoritmo.PontoAtual())
@@ -44,7 +44,7 @@ func TestAlgoritmoBresenham2_2(t *testing.T) {
 	assert.Equal(t, Ponto{X: 2, Y: 5}, algoritmo.PontoAtual())
 }
 
-func TestAlgoritmoBresenham2_3(t *testing.T) {
+func TestAlgoritmoBresenham_3(t *testing.T) {
 	algoritmo := NewAlgoritmoBresenham(Ponto{X: -4, Y: 5}, Ponto{X: 0, Y: 2})
 	assert.True(t, algoritmo.Move())
 	assert.Equal(t, Ponto{X: -4, Y: 5}, algoritmo.PontoAtual())
