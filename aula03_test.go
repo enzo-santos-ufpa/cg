@@ -43,3 +43,19 @@ func TestAlgoritmoBresenham2_2(t *testing.T) {
 	assert.False(t, algoritmo.Move())
 	assert.Equal(t, Ponto{X: 2, Y: 5}, algoritmo.PontoAtual())
 }
+
+func TestAlgoritmoBresenham2_3(t *testing.T) {
+	algoritmo := NewAlgoritmoBresenham(Ponto{X: -4, Y: 5}, Ponto{X: 0, Y: 2})
+	assert.True(t, algoritmo.Move())
+	assert.Equal(t, Ponto{X: -4, Y: 5}, algoritmo.PontoAtual())
+	assert.True(t, algoritmo.Move())
+	assert.Equal(t, Ponto{X: -3, Y: 4}, algoritmo.PontoAtual())
+	assert.True(t, algoritmo.Move())
+	assert.Equal(t, Ponto{X: -2, Y: 4}, algoritmo.PontoAtual())
+	assert.True(t, algoritmo.Move())
+	assert.Equal(t, Ponto{X: -1, Y: 3}, algoritmo.PontoAtual())
+	assert.True(t, algoritmo.Move())
+	assert.Equal(t, Ponto{X: 0, Y: 2}, algoritmo.PontoAtual())
+	assert.False(t, algoritmo.Move())
+	assert.Equal(t, Ponto{X: 0, Y: 2}, algoritmo.PontoAtual())
+}
