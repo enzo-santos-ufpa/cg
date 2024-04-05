@@ -1,9 +1,10 @@
 package ufpa_cg
 
 import (
-	"github.com/stretchr/testify/require"
 	"math"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestPonto_MoveMatricial(t *testing.T) {
