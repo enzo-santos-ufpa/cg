@@ -38,3 +38,4 @@ ok      ufpa_cg 0.167s
 - [**Aula 2**](aula02.go) (21/03/2024): algoritmos bruto e de Bresenham para gerar uma linha entre dois pontos
 - [**Aula 3**](aula03.go) (26/03/2024): algoritmo de Bresenham considerando pontos fora do primeiro octante
 - [**Aula 4**](aula04.go) (02/04/2024): algoritmo de rotação em torno de um ponto pivô
+- [**Aula 5**](aula05.go) (04/04/2024): operações de translação, transformação de escala e rotação utilizando matrizes
