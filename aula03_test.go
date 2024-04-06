@@ -59,3 +59,19 @@ func TestAlgoritmoBresenham_3(t *testing.T) {
 	require.False(t, algoritmo.Move())
 	require.Equal(t, Ponto{X: 0, Y: 2}, algoritmo.PontoAtual())
 }
+
+func TestAlgoritmoBresenham_4(t *testing.T) {
+	algoritmo := NewAlgoritmoBresenham(Ponto{X: 0, Y: 2}, Ponto{X: -4, Y: 5})
+	require.True(t, algoritmo.Move())
+	require.Equal(t, Ponto{X: 0, Y: 2}, algoritmo.PontoAtual())
+	require.True(t, algoritmo.Move())
+	require.Equal(t, Ponto{X: -1, Y: 3}, algoritmo.PontoAtual())
+	require.True(t, algoritmo.Move())
+	require.Equal(t, Ponto{X: -2, Y: 3}, algoritmo.PontoAtual())
+	require.True(t, algoritmo.Move())
+	require.Equal(t, Ponto{X: -3, Y: 4}, algoritmo.PontoAtual())
+	require.True(t, algoritmo.Move())
+	require.Equal(t, Ponto{X: -4, Y: 5}, algoritmo.PontoAtual())
+	require.False(t, algoritmo.Move())
+	require.Equal(t, Ponto{X: -4, Y: 5}, algoritmo.PontoAtual())
+}
