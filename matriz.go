@@ -27,27 +27,26 @@ func NewMatrizVazia(dimensao DimensaoMatriz) *Matriz {
 }
 
 func NewMatriz(valor [][]float64) (*Matriz, error) {
-	numColsEsperado := -1
-	for indice, linha := range valor {
-		numColsAtual := len(linha)
-		if numColsEsperado == -1 {
-			numColsEsperado = numColsAtual
-			continue
+	numsCols := make([]int, len(valor))
+	numsColsOk := true
+	for i, linha := range valor {
+		numCols := len(linha)
+		if numCols == 0 {
+			return nil, fmt.Errorf("given array cannot be converted to a matrix: expected row at index %d to be non-empty", i)
 		}
-		if numColsEsperado == numColsAtual {
-			continue
+		numsCols[i] = numCols
+		if numsColsOk && i > 0 && numCols != numsCols[0] {
+			numsColsOk = false
 		}
-		return nil, fmt.Errorf(
-			"rows have unequal lengths: expected %d at index %d, found %d",
-			numColsEsperado,
-			indice,
-			numColsAtual,
-		)
 	}
+	if !numsColsOk {
+		return nil, fmt.Errorf("given array cannot be converted to a matrix: expected %v to be all equal", numsCols)
+	}
+
 	return &Matriz{
 		Dimensao: DimensaoMatriz{
 			NumLinhas:  len(valor),
-			NumColunas: numColsEsperado,
+			NumColunas: numsCols[0],
 		},
 		valor: valor,
 	}, nil

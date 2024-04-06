@@ -6,6 +6,52 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestMatriz_NewMatriz_Linha(t *testing.T) {
+	m, err := NewMatriz([][]float64{{1}, {2}, {3}})
+	require.Nil(t, err)
+	require.NotNil(t, m)
+	require.Equal(t, DimensaoMatriz{NumLinhas: 3, NumColunas: 1}, m.Dimensao)
+}
+
+func TestMatriz_NewMatriz_Coluna(t *testing.T) {
+	m, err := NewMatriz([][]float64{{1, 2, 3}})
+	require.Nil(t, err)
+	require.NotNil(t, m)
+	require.Equal(t, DimensaoMatriz{NumLinhas: 1, NumColunas: 3}, m.Dimensao)
+}
+
+func TestMatriz_NewMatriz_Quadrada(t *testing.T) {
+	m, err := NewMatriz([][]float64{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}})
+	require.Nil(t, err)
+	require.NotNil(t, m)
+	require.Equal(t, DimensaoMatriz{NumLinhas: 3, NumColunas: 3}, m.Dimensao)
+}
+
+func TestMatriz_NewMatriz_LinhaSublinhasVazia(t *testing.T) {
+	m, err := NewMatriz([][]float64{{}})
+	require.Nil(t, m)
+	require.NotNil(t, err)
+	require.Equal(t, "given array cannot be converted to a matrix: expected row at index 0 to be non-empty", err.Error())
+}
+
+func TestMatriz_NewMatriz_ColunaSublinhasVazia(t *testing.T) {
+	m, err := NewMatriz([][]float64{{}, {}, {}})
+	require.Nil(t, m)
+	require.NotNil(t, err)
+	require.Equal(t, "given array cannot be converted to a matrix: expected row at index 0 to be non-empty", err.Error())
+}
+
+func TestMatriz_NewMatriz_SublinhasIncompativel(t *testing.T) {
+	m, err := NewMatriz([][]float64{
+		{1, 11, 3},
+		{13, 5},
+		{7, 17, 9},
+	})
+	require.Nil(t, m)
+	require.NotNil(t, err)
+	require.Equal(t, "given array cannot be converted to a matrix: expected [3 2 3] to be all equal", err.Error())
+}
+
 func TestMatriz_Soma(t *testing.T) {
 	m1, err := NewMatriz([][]float64{
 		{1, 11, 3},
