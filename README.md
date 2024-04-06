@@ -26,11 +26,12 @@ $ cd cg
 Execute os testes:
 
 ```shell
-$ go test ./...
+$ go test -cover ./...
 ```
 
 ```none
-ok      ufpa_cg 0.167s
+        ufpa_cg/cmd/exibicao            coverage: 0.0% of statements
+ok      ufpa_cg 0.508s  coverage: 97.1% of statements
 ```
 
 ## Implementações
