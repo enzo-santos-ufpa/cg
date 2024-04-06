@@ -80,6 +80,26 @@ func TestMatriz_Soma(t *testing.T) {
 	require.Equal(t, m3Esperada, m3Atual)
 }
 
+func TestMatriz_Soma_Incompativel(t *testing.T) {
+	m1, err := NewMatriz([][]float64{
+		{1, 11, 3},
+		{13, 5, 15},
+		{7, 17, 9},
+	})
+	require.Nil(t, err)
+
+	m2, err := NewMatriz([][]float64{
+		{10, 2},
+		{4, 14},
+	})
+	require.Nil(t, err)
+
+	m3, err := m1.Soma(m2)
+	require.Nil(t, m3)
+	require.NotNil(t, err)
+	require.Equal(t, "matrices are incompatible for matrix addition: expected (3, 3) + (2, 2) to be equal", err.Error())
+}
+
 func TestMatriz_MultiplicaEscalar(t *testing.T) {
 	m1, err := NewMatriz([][]float64{
 		{10, 12, 14},

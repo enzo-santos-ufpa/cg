@@ -63,9 +63,11 @@ func (m *Matriz) Set(l, c int, valor float64) {
 func (m *Matriz) Soma(m2 *Matriz) (*Matriz, error) {
 	if m.Dimensao != m2.Dimensao {
 		return nil, fmt.Errorf(
-			"matrices have unequal dimensions: left has %v, right has %v",
-			m.Dimensao,
-			m2.Dimensao,
+			"matrices are incompatible for matrix addition: expected (%d, %d) + (%d, %d) to be equal",
+			m.Dimensao.NumLinhas,
+			m.Dimensao.NumColunas,
+			m2.Dimensao.NumLinhas,
+			m2.Dimensao.NumColunas,
 		)
 	}
 	resultado := NewMatrizVazia(m.Dimensao)
