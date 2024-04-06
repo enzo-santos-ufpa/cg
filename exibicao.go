@@ -6,50 +6,6 @@ import (
 	"slices"
 )
 
-type Sequencia struct {
-	Inicio int
-	Fim    int
-
-	valor int
-	ok    bool
-}
-
-func NewSequencia(inicio, fim int) *Sequencia {
-	return &Sequencia{
-		Inicio: inicio,
-		Fim:    fim,
-		valor:  0,
-		ok:     false,
-	}
-}
-
-func (s *Sequencia) Move() bool {
-	var valorFim, valorInicio int
-	if s.Inicio <= s.Fim {
-		valorInicio = s.Inicio - 1
-		valorFim = s.Fim + 1
-	} else {
-		valorInicio = s.Fim - 1
-		valorFim = s.Inicio + 1
-	}
-
-	valor := s.valor
-	if !s.ok {
-		s.valor = valorFim
-		s.ok = true
-		return true
-	}
-	if valor == valorInicio {
-		return false
-	}
-	s.valor--
-	return true
-}
-
-func (s *Sequencia) Value() int {
-	return s.valor
-}
-
 func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 	pontos := make([]Ponto, 0)
 	for algoritmo.Move() {
@@ -58,18 +14,30 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 	p1 := pontos[0]
 	p2 := pontos[len(pontos)-1]
 
-	minX := p1.X
-	maxX := p2.X
-
 	writer := bufio.NewWriter(w)
 	defer writer.Flush()
 
 	chars := []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"}
 
-	sequenciaY := NewSequencia(p2.Y, p1.Y)
-	for sequenciaY.Move() {
-		y := sequenciaY.Value()
+	var minX, maxX int
+	if p2.X > p1.X {
+		minX = p1.X
+		maxX = p2.X
+	} else {
+		minX = p2.X
+		maxX = p1.X
+	}
 
+	var minY, maxY int
+	if p2.Y > p1.Y {
+		minY = p1.Y
+		maxY = p2.Y
+	} else {
+		minY = p2.Y
+		maxY = p1.Y
+	}
+
+	for y := maxY + 1; y >= minY-1; y-- {
 		n := y % 10
 		if n < 0 {
 			n = -n
