@@ -102,6 +102,13 @@ func (m *Matriz) Transposta() *Matriz {
 }
 
 func (m *Matriz) Multiplica(m2 *Matriz) (*Matriz, error) {
+	if m.Dimensao.NumColunas != m2.Dimensao.NumLinhas {
+		return nil, fmt.Errorf(
+			"matrices are incompatible for matrix multiplication: expected (_, %d) x (%d, _) to be equal",
+			m.Dimensao.NumColunas,
+			m2.Dimensao.NumLinhas,
+		)
+	}
 	resultado := NewMatrizVazia(DimensaoMatriz{
 		NumLinhas:  m.Dimensao.NumLinhas,
 		NumColunas: m2.Dimensao.NumColunas,

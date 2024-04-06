@@ -236,3 +236,22 @@ func TestMatriz_Multiplica(t *testing.T) {
 
 	require.Equal(t, m3Esperada, m3Atual)
 }
+
+func TestMatriz_Multiplica_Incompativel(t *testing.T) {
+	m1, err := NewMatriz([][]float64{
+		{1, 2, 3},
+		{4, 5, 6},
+	})
+	require.Nil(t, err)
+
+	m2, err := NewMatriz([][]float64{
+		{4},
+		{6},
+	})
+	require.Nil(t, err)
+
+	m3, err := m1.Multiplica(m2)
+	require.Nil(t, m3)
+	require.NotNil(t, err)
+	require.Equal(t, "matrices are incompatible for matrix multiplication: expected (_, 3) x (2, _) to be equal", err.Error())
+}
