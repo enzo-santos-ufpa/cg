@@ -64,9 +64,21 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 	writer := bufio.NewWriter(w)
 	defer writer.Flush()
 
+	chars := []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"}
+
 	sequenciaY := NewSequencia(p2.Y, p1.Y)
 	for sequenciaY.Move() {
 		y := sequenciaY.Value()
+
+		n := y % 10
+		if n < 0 {
+			n = -n
+		}
+		prefix := chars[n]
+		if _, err := writer.WriteString(prefix); err != nil {
+			return err
+		}
+
 		for x := minX - 1; x <= maxX+1; x++ {
 			ponto := Ponto{X: x, Y: y}
 			var text string
@@ -75,11 +87,15 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 			} else if slices.Contains(pontos, ponto) {
 				text = "░"
 			} else if ponto.X == 0 && ponto.Y == 0 {
-				text = "┼"
+				text = "╋1"
 			} else if ponto.X == 0 {
-				text = "│"
+				text = "┃"
 			} else if ponto.Y == 0 {
-				text = "─"
+				text = "━"
+			} else if ponto.X == p1.X || ponto.X == p2.X {
+				text = "┊"
+			} else if ponto.Y == p1.Y || ponto.Y == p2.Y {
+				text = "╌"
 			} else {
 				text = " "
 			}
@@ -88,6 +104,21 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 			}
 		}
 		if _, err := writer.WriteString("\n"); err != nil {
+			return err
+		}
+	}
+
+	if _, err := writer.WriteString(" "); err != nil {
+		return err
+	}
+	for x := minX - 1; x <= maxX+1; x++ {
+		n := x % 10
+		if n < 0 {
+			n = -n
+		}
+		text := chars[n]
+
+		if _, err := writer.WriteString(text); err != nil {
 			return err
 		}
 	}
