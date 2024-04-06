@@ -82,21 +82,22 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 		for x := minX - 1; x <= maxX+1; x++ {
 			ponto := Ponto{X: x, Y: y}
 			var text string
-			if ponto == p1 || ponto == p2 {
+			switch {
+			case ponto == p1 || ponto == p2:
 				text = "█"
-			} else if slices.Contains(pontos, ponto) {
+			case slices.Contains(pontos, ponto):
 				text = "░"
-			} else if ponto.X == 0 && ponto.Y == 0 {
+			case ponto.X == 0 && ponto.Y == 0:
 				text = "╋"
-			} else if ponto.X == 0 {
+			case ponto.X == 0:
 				text = "┃"
-			} else if ponto.Y == 0 {
+			case ponto.Y == 0:
 				text = "━"
-			} else if ponto.X == p1.X || ponto.X == p2.X {
+			case ponto.X == p1.X || ponto.X == p2.X:
 				text = "┊"
-			} else if ponto.Y == p1.Y || ponto.Y == p2.Y {
+			case ponto.Y == p1.Y || ponto.Y == p2.Y:
 				text = "╌"
-			} else {
+			default:
 				text = " "
 			}
 			if _, err := writer.WriteString(text); err != nil {
