@@ -87,7 +87,7 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 			} else if slices.Contains(pontos, ponto) {
 				text = "░"
 			} else if ponto.X == 0 && ponto.Y == 0 {
-				text = "╋1"
+				text = "╋"
 			} else if ponto.X == 0 {
 				text = "┃"
 			} else if ponto.Y == 0 {
