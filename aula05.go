@@ -20,8 +20,8 @@ func (p Ponto) MoveMatricial(dx, dy int) Ponto {
 
 func (p Ponto) RedimensionaMatricial(ex, ey float64) Ponto {
 	m0, _ := NewMatriz([][]float64{
-		{float64(ex), 0},
-		{0, float64(ey)},
+		{ex, 0},
+		{0, ey},
 	})
 	m1, _ := NewMatriz([][]float64{
 		{float64(p.X)},
