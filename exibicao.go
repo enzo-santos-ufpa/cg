@@ -25,23 +25,18 @@ func ExibePoligono(algoritmos []AlgoritmoLinha, w io.Writer) error {
 	chars := []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"}
 
 	var minX, maxX, minY, maxY int
-	var minXOk, maxXOk, minYOk, maxYOk bool
-	for _, vertice := range vertices {
-		if !minXOk || vertice.X < minX {
+	for i, vertice := range vertices {
+		if i == 0 || vertice.X < minX {
 			minX = vertice.X
-			minXOk = true
 		}
-		if !maxXOk || vertice.X > maxX {
+		if i == 0 || vertice.X > maxX {
 			maxX = vertice.X
-			maxXOk = true
 		}
-		if !minYOk || vertice.Y < minY {
+		if i == 0 || vertice.Y < minY {
 			minY = vertice.Y
-			minYOk = true
 		}
-		if !maxYOk || vertice.Y > maxY {
+		if i == 0 || vertice.Y > maxY {
 			maxY = vertice.Y
-			maxYOk = true
 		}
 	}
 
