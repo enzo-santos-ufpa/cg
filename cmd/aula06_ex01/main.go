@@ -23,7 +23,7 @@ func run(stdout io.Writer) error {
 	if err := ufpa_cg.ExibePoligono([]ufpa_cg.AlgoritmoLinha{
 		ufpa_cg.NewAlgoritmoBresenham(pA, pB),
 		ufpa_cg.NewAlgoritmoBresenham(pB, pC),
-		ufpa_cg.NewAlgoritmoBresenham(pA, pC),
+		ufpa_cg.NewAlgoritmoBresenham(pC, pA),
 	}, stdout); err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func run(stdout io.Writer) error {
 	if err := ufpa_cg.ExibePoligono([]ufpa_cg.AlgoritmoLinha{
 		ufpa_cg.NewAlgoritmoBresenham(pA, pB),
 		ufpa_cg.NewAlgoritmoBresenham(pB, pC),
-		ufpa_cg.NewAlgoritmoBresenham(pA, pC),
+		ufpa_cg.NewAlgoritmoBresenham(pC, pA),
 	}, stdout); err != nil {
 		return err
 	}
