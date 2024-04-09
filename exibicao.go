@@ -7,34 +7,45 @@ import (
 )
 
 func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
+	return ExibePoligono([]AlgoritmoLinha{algoritmo}, w)
+}
+
+func ExibePoligono(algoritmos []AlgoritmoLinha, w io.Writer) error {
 	pontos := make([]Ponto, 0)
-	for algoritmo.Move() {
-		pontos = append(pontos, algoritmo.PontoAtual())
+	vertices := make([]Ponto, 0)
+	for _, algoritmo := range algoritmos {
+		for algoritmo.Move() {
+			pontos = append(pontos, algoritmo.PontoAtual())
+		}
+		p1 := pontos[0]
+		p2 := pontos[len(pontos)-1]
+		vertices = append(vertices, p1, p2)
 	}
-	p1 := pontos[0]
-	p2 := pontos[len(pontos)-1]
 
 	writer := bufio.NewWriter(w)
 	defer writer.Flush()
 
 	chars := []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"}
 
-	var minX, maxX int
-	if p2.X > p1.X {
-		minX = p1.X
-		maxX = p2.X
-	} else {
-		minX = p2.X
-		maxX = p1.X
-	}
-
-	var minY, maxY int
-	if p2.Y > p1.Y {
-		minY = p1.Y
-		maxY = p2.Y
-	} else {
-		minY = p2.Y
-		maxY = p1.Y
+	var minX, maxX, minY, maxY int
+	var minXOk, maxXOk, minYOk, maxYOk bool
+	for _, vertice := range vertices {
+		if !minXOk || vertice.X < minX {
+			minX = vertice.X
+			minXOk = true
+		}
+		if !maxXOk || vertice.X > maxX {
+			maxX = vertice.X
+			maxXOk = true
+		}
+		if !minYOk || vertice.Y < minY {
+			minY = vertice.Y
+			minYOk = true
+		}
+		if !maxYOk || vertice.Y > maxY {
+			maxY = vertice.Y
+			maxYOk = true
+		}
 	}
 
 	for y := maxY + 1; y >= minY-1; y-- {
@@ -51,7 +62,7 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 			ponto := Ponto{X: x, Y: y}
 			var text string
 			switch {
-			case ponto == p1 || ponto == p2:
+			case slices.Contains(vertices, ponto):
 				text = "█"
 			case slices.Contains(pontos, ponto):
 				text = "░"
@@ -61,9 +72,13 @@ func Exibe(algoritmo AlgoritmoLinha, w io.Writer) error {
 				text = "┃"
 			case ponto.Y == 0:
 				text = "━"
-			case ponto.X == p1.X || ponto.X == p2.X:
+			case slices.ContainsFunc(vertices, func(p Ponto) bool {
+				return ponto.X == p.X
+			}):
 				text = "┊"
-			case ponto.Y == p1.Y || ponto.Y == p2.Y:
+			case slices.ContainsFunc(vertices, func(p Ponto) bool {
+				return ponto.Y == p.Y
+			}):
 				text = "╌"
 			default:
 				text = " "
