@@ -1,7 +1,7 @@
 package ufpa_cg
 
 import (
-	"bufio"
+	"fmt"
 	"io"
 	"slices"
 )
@@ -21,9 +21,6 @@ func ExibePoligono(algoritmos []AlgoritmoLinha, w io.Writer) error {
 		p2 := pontos[len(pontos)-1]
 		vertices = append(vertices, p1, p2)
 	}
-
-	writer := bufio.NewWriter(w)
-	defer writer.Flush()
 
 	chars := []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"}
 
@@ -54,7 +51,7 @@ func ExibePoligono(algoritmos []AlgoritmoLinha, w io.Writer) error {
 			n = -n
 		}
 		prefix := chars[n]
-		if _, err := writer.WriteString(prefix); err != nil {
+		if _, err := fmt.Fprint(w, prefix); err != nil {
 			return err
 		}
 
@@ -83,16 +80,16 @@ func ExibePoligono(algoritmos []AlgoritmoLinha, w io.Writer) error {
 			default:
 				text = " "
 			}
-			if _, err := writer.WriteString(text); err != nil {
+			if _, err := fmt.Fprint(w, text); err != nil {
 				return err
 			}
 		}
-		if _, err := writer.WriteString("\n"); err != nil {
+		if _, err := fmt.Fprint(w, "\n"); err != nil {
 			return err
 		}
 	}
 
-	if _, err := writer.WriteString(" "); err != nil {
+	if _, err := fmt.Fprint(w, " "); err != nil {
 		return err
 	}
 	for x := minX - 1; x <= maxX+1; x++ {
@@ -102,7 +99,7 @@ func ExibePoligono(algoritmos []AlgoritmoLinha, w io.Writer) error {
 		}
 		text := chars[n]
 
-		if _, err := writer.WriteString(text); err != nil {
+		if _, err := fmt.Fprint(w, text); err != nil {
 			return err
 		}
 	}
