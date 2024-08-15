@@ -30,7 +30,7 @@ $ go test -cover ./...
 ```
 
 ```none
-ok      ufpa_cg X.XXXs                  coverage: 97.3% of statements
+ok      ufpa_cg X.XXXs                  coverage: 97.6% of statements
         ufpa_cg/cmd/exibicao            coverage: 0.0% of statements
 ok      ufpa_cg/cmd/aula06_ex01 X.XXXs  coverage: 86.1% of statements
         ufpa_cg/cmd/aula07_ex01         coverage: 0.0% of statements
