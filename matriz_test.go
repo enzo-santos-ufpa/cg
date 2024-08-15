@@ -1,10 +1,21 @@
 package ufpa_cg
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
+
+func TestGrausParaRadianos(t *testing.T) {
+	const delta = 0.00001
+	require.InDelta(t, GrausParaRadianos(0), 0, delta)
+	require.InDelta(t, GrausParaRadianos(45), math.Pi/4, delta)
+	require.InDelta(t, GrausParaRadianos(90), math.Pi/2, delta)
+	require.InDelta(t, GrausParaRadianos(135), 3*math.Pi/4, delta)
+	require.InDelta(t, GrausParaRadianos(180), math.Pi, delta)
+	require.InDelta(t, GrausParaRadianos(360), 2*math.Pi, delta)
+}
 
 func TestMatriz_NewMatriz_Linha(t *testing.T) {
 	m, err := NewMatriz([][]float64{{1}, {2}, {3}})

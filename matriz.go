@@ -2,7 +2,12 @@ package ufpa_cg
 
 import (
 	"fmt"
+	"math"
 )
+
+func GrausParaRadianos(a float64) float64 {
+	return a * math.Pi / 180.0
+}
 
 type DimensaoMatriz struct {
 	NumLinhas  int

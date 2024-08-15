@@ -30,9 +30,10 @@ $ go test -cover ./...
 ```
 
 ```none
+ok      ufpa_cg X.XXXs                  coverage: 97.3% of statements
         ufpa_cg/cmd/exibicao            coverage: 0.0% of statements
-ok      ufpa_cg 0.312s  coverage: 97.1% of statements
-ok      ufpa_cg/cmd/aula06_ex01 0.252s  coverage: 86.1% of statements
+ok      ufpa_cg/cmd/aula06_ex01 X.XXXs  coverage: 86.1% of statements
+        ufpa_cg/cmd/aula07_ex01         coverage: 0.0% of statements
 ```
 
 ## Implementações
@@ -42,3 +43,5 @@ ok      ufpa_cg/cmd/aula06_ex01 0.252s  coverage: 86.1% of statements
 - [**Aula 4**](aula04.go) (02/04/2024): algoritmo de rotação em torno de um ponto pivô
 - [**Aula 5**](aula05.go) (04/04/2024): operações de translação, transformação de escala e rotação utilizando matrizes
 - [**Aula 6**](cmd/aula06_ex01/main.go) (09/04/2024): exercícios com conteúdo da aula anterior
+- [**Aula 7**](aula07.go) + [exercícios](cmd/aula07_ex01/main.go) (11/04/2024): operações de translação, transformação
+  de escala e usando matrizes para pontos 3D
