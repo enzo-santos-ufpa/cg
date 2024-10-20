@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -33,100 +32,6 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 		return true
 	}
 	return false
-}
-
-type Game struct {
-	TextFont *TextFont
-
-	menu           ebiten.Game
-	options        []OpcaoMenu
-	selectingIndex int
-}
-
-func (g *Game) Update() error {
-	menu := g.menu
-	if menu == nil {
-		switch {
-		case repeatingKeyPressed(ebiten.KeyDown) && g.selectingIndex < len(g.options)-1:
-			g.selectingIndex++
-		case repeatingKeyPressed(ebiten.KeyUp) && g.selectingIndex > 0:
-			g.selectingIndex--
-		case repeatingKeyPressed(ebiten.KeyEnter) || repeatingKeyPressed(ebiten.KeyNumpadEnter):
-			g.menu = &SubGame{
-				Source: g.TextFont.Source,
-				Modulo: g.options[g.selectingIndex].Create(),
-			}
-		}
-
-	} else {
-		if repeatingKeyPressed(ebiten.KeyEscape) {
-			g.menu = nil
-		} else {
-			return menu.Update()
-		}
-	}
-	return nil
-}
-
-func (g *Game) Draw(screen *ebiten.Image) {
-	menu := g.menu
-	if menu != nil {
-		menu.Draw(screen)
-		return
-	}
-
-	const headerHeightOffset = 10.0 // Quanto o cabeçalho "Menu de opções" deve ficar deslocado para baixo
-	const headerWidthOffset = 15.0  // Quanto o cabeçalho "Menu de opções" deve ficar deslocado à direita
-	const headerLineSpacing = 10.0  // Quanto o cabeçalho "Menu de opções" deve ficar separado do corpo de opções
-	const widthOffset = 20.0        // Quanto cada opão deve ficar deslocada à direita
-	const lineSpacing = 5.0         // Quanto cada opção deve ficar sepadada uma da outra
-	const fontSize = 16             // Tamanho da fonte de cada texto nessa tela
-
-	heightOffset := headerHeightOffset
-
-	// Constrói lista de opções do menu principal
-	labels := make([]string, len(g.options)+1)
-	labels[0] = "Menu de opções"
-	for i, module := range g.options {
-		labels[i+1] = module.Title()
-	}
-	for n, label := range labels {
-		i := n - 1
-		op := &ebitentext.DrawOptions{}
-		if n == 0 {
-			op.GeoM.Translate(headerWidthOffset, heightOffset)
-		} else {
-			op.GeoM.Translate(widthOffset, heightOffset)
-		}
-		if g.selectingIndex == i {
-			op.ColorScale.ScaleWithColor(color.RGBA{R: 0x42, G: 0x87, B: 0xf5})
-		} else {
-			op.ColorScale.ScaleWithColor(color.White)
-		}
-		f := &ebitentext.GoTextFace{
-			Source:    g.TextFont.Source,
-			Direction: ebitentext.DirectionLeftToRight,
-			Size:      fontSize,
-			Language:  language.BrazilianPortuguese,
-		}
-		var text string
-		if n == 0 {
-			text = fmt.Sprintf("%s\n", label)
-		} else {
-			text = fmt.Sprintf("%d. %s\n", i+1, label)
-		}
-		ebitentext.Draw(screen, text, f, op)
-		_, height := ebitentext.Measure(text, f, 0)
-		if n == 0 {
-			heightOffset += height + headerLineSpacing
-		} else {
-			heightOffset += height + lineSpacing
-		}
-	}
-}
-
-func (g *Game) Layout(_, _ int) (int, int) {
-	return screenWidth, screenHeight
 }
 
 type OpcaoMenu interface {
@@ -195,7 +100,7 @@ func main() {
 		}),
 		fx.Provide(zap.NewProduction),
 		fx.Provide(func(lc fx.Lifecycle, textFont *TextFont, logger *zap.Logger) *AppData {
-			game := &Game{
+			jogo := &Jogo{
 				TextFont: textFont,
 				options: []OpcaoMenu{
 					NewOpcaoDesenharLinha(),
@@ -225,7 +130,7 @@ func main() {
 
 						ebiten.SetWindowSize(screenWidth, screenHeight)
 						ebiten.SetWindowTitle("Computação Gráfica - Trabalho 3")
-						if err := ebiten.RunGame(game); err != nil {
+						if err := ebiten.RunGame(jogo); err != nil {
 							errc <- err
 						}
 					}()
