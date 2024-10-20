@@ -52,13 +52,14 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	menu := g.menu
-	const headerWidthOffset = 15.0
-	const headerLineSpacing = 10.0
-	const widthOffset = 20.0
-	const lineSpacing = 5.0
-	const fontSize = 16
+	const headerHeightOffset = 10.0 // Quanto o cabeçalho "Menu de opções" deve ficar deslocado para baixo
+	const headerWidthOffset = 15.0  // Quanto o cabeçalho "Menu de opções" deve ficar deslocado à direita
+	const headerLineSpacing = 10.0  // Quanto o cabeçalho "Menu de opções" deve ficar separado do corpo de opções
+	const widthOffset = 20.0        // Quanto cada opão deve ficar deslocada à direita
+	const lineSpacing = 5.0         // Quanto cada opção deve ficar sepadada uma da outra
+	const fontSize = 16             // Tamanho da fonte de cada texto nessa tela
 
-	heightOffset := 10.0
+	heightOffset := headerHeightOffset
 	if menu == nil {
 		for n, label := range append([]string{"Menu de opções"}, g.choices...) {
 			i := n - 1
