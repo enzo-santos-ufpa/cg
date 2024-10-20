@@ -86,6 +86,7 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 	pontoA := g.pontoA
 	pontoB := g.pontoB
 
+	var hoveringPoint *ufpa_cg.Ponto
 	// Percorre o grid de pontos
 	for j := minY; j <= maxY; j++ {
 		for i := minX; i <= maxX; i++ {
@@ -98,7 +99,7 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 				(x <= g.cursorX && g.cursorX <= x+pointSize) && // Se a posição X do cursor estiver dentro deste ponto
 				(y <= g.cursorY && g.cursorY <= y+pointSize) { // Se a posição Y do cursor estiver dentro deste ponto
 				pixel.Fill(hoveredColor) // Marca este ponto como "EM SELEÇÃO"
-				g.pontoAtual = &ponto
+				hoveringPoint = &ponto
 			} else if (pontoA != nil && *pontoA == ponto) || // Se este ponto for o ponto A selecionado
 				(pontoB != nil && *pontoB == ponto) { // Se este ponto for o ponto B selecionado
 				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
@@ -143,8 +144,11 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 		}
 		heightOffset += int(h) + 5
 	}
-	if ponto := g.pontoAtual; ponto != nil && hasHoveringEntry {
+	if ponto := hoveringPoint; ponto != nil && hasHoveringEntry {
+		g.pontoAtual = ponto
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y), hoveringEntryDx, hoveringEntryDy)
+	} else {
+		g.pontoAtual = nil
 	}
 	if pontoA != nil && pontoB != nil {
 		op := &ebitentext.DrawOptions{}
