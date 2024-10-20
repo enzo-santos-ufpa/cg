@@ -9,7 +9,7 @@ import (
 	"image/color"
 )
 
-type Jogo struct {
+type JogoPrimario struct {
 	TextFont *TextFont
 
 	menu           ebiten.Game
@@ -17,7 +17,7 @@ type Jogo struct {
 	selectingIndex int
 }
 
-func (j *Jogo) Update() error {
+func (j *JogoPrimario) Update() error {
 	menu := j.menu
 	if menu == nil {
 		switch {
@@ -42,7 +42,7 @@ func (j *Jogo) Update() error {
 	return nil
 }
 
-func (j *Jogo) Draw(screen *ebiten.Image) {
+func (j *JogoPrimario) Draw(screen *ebiten.Image) {
 	menu := j.menu
 	if menu != nil {
 		menu.Draw(screen)
@@ -99,6 +99,6 @@ func (j *Jogo) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (j *Jogo) Layout(_, _ int) (int, int) {
+func (j *JogoPrimario) Layout(_, _ int) (int, int) {
 	return screenWidth, screenHeight
 }

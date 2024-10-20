@@ -66,7 +66,7 @@ func main() {
 		}),
 		fx.Provide(zap.NewProduction),
 		fx.Provide(func(lc fx.Lifecycle, textFont *TextFont, logger *zap.Logger) *AppData {
-			jogo := &Jogo{
+			jogo := &JogoPrimario{
 				TextFont: textFont,
 				options: []OpcaoMenu{
 					NewOpcaoDesenharLinha(),
