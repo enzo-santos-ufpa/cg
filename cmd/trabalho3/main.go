@@ -33,6 +33,11 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 	return false
 }
 
+type TelaOpcao interface {
+	Game() ebiten.Game
+	Titulo() string
+}
+
 type Game struct {
 	TextFont *TextFont
 
@@ -42,16 +47,34 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
-	if repeatingKeyPressed(ebiten.KeyDown) && g.selectingIndex < len(g.choices)-1 {
-		g.selectingIndex++
-	} else if repeatingKeyPressed(ebiten.KeyUp) && g.selectingIndex > 0 {
-		g.selectingIndex--
+	menu := g.menu
+	if menu == nil {
+		switch {
+		case repeatingKeyPressed(ebiten.KeyDown) && g.selectingIndex < len(g.choices)-1:
+			g.selectingIndex++
+		case repeatingKeyPressed(ebiten.KeyUp) && g.selectingIndex > 0:
+			g.selectingIndex--
+		case repeatingKeyPressed(ebiten.KeyEnter) || repeatingKeyPressed(ebiten.KeyNumpadEnter):
+			g.menu = NewTelaDesenharLinha(g.TextFont).Game()
+		}
+
+	} else {
+		if repeatingKeyPressed(ebiten.KeyEscape) {
+			g.menu = nil
+		} else {
+			return menu.Update()
+		}
 	}
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	menu := g.menu
+	if menu != nil {
+		menu.Draw(screen)
+		return
+	}
+
 	const headerHeightOffset = 10.0 // Quanto o cabeçalho "Menu de opções" deve ficar deslocado para baixo
 	const headerWidthOffset = 15.0  // Quanto o cabeçalho "Menu de opções" deve ficar deslocado à direita
 	const headerLineSpacing = 10.0  // Quanto o cabeçalho "Menu de opções" deve ficar separado do corpo de opções
@@ -60,44 +83,38 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	const fontSize = 16             // Tamanho da fonte de cada texto nessa tela
 
 	heightOffset := headerHeightOffset
-	if menu == nil {
-		for n, label := range append([]string{"Menu de opções"}, g.choices...) {
-			i := n - 1
-			op := &ebitentext.DrawOptions{}
-			if n == 0 {
-				op.GeoM.Translate(headerWidthOffset, heightOffset)
-			} else {
-				op.GeoM.Translate(widthOffset, heightOffset)
-			}
-			if g.selectingIndex == i {
-				op.ColorScale.ScaleWithColor(color.RGBA{R: 0x42, G: 0x87, B: 0xf5})
-			} else {
-				op.ColorScale.ScaleWithColor(color.White)
-			}
-			f := &ebitentext.GoTextFace{
-				Source:    g.TextFont.Source,
-				Direction: ebitentext.DirectionLeftToRight,
-				Size:      fontSize,
-				Language:  language.BrazilianPortuguese,
-			}
-			var text string
-			if n == 0 {
-				text = fmt.Sprintf("%s\n", label)
-			} else {
-				text = fmt.Sprintf("%d. %s\n", i+1, label)
-			}
-			ebitentext.Draw(screen, text, f, op)
-			_, height := ebitentext.Measure(text, f, 0)
-			if n == 0 {
-				heightOffset += height + headerLineSpacing
-			} else {
-				heightOffset += height + lineSpacing
-
-			}
+	for n, label := range append([]string{"Menu de opções"}, g.choices...) {
+		i := n - 1
+		op := &ebitentext.DrawOptions{}
+		if n == 0 {
+			op.GeoM.Translate(headerWidthOffset, heightOffset)
+		} else {
+			op.GeoM.Translate(widthOffset, heightOffset)
 		}
-
-	} else {
-		menu.Draw(screen)
+		if g.selectingIndex == i {
+			op.ColorScale.ScaleWithColor(color.RGBA{R: 0x42, G: 0x87, B: 0xf5})
+		} else {
+			op.ColorScale.ScaleWithColor(color.White)
+		}
+		f := &ebitentext.GoTextFace{
+			Source:    g.TextFont.Source,
+			Direction: ebitentext.DirectionLeftToRight,
+			Size:      fontSize,
+			Language:  language.BrazilianPortuguese,
+		}
+		var text string
+		if n == 0 {
+			text = fmt.Sprintf("%s\n", label)
+		} else {
+			text = fmt.Sprintf("%d. %s\n", i+1, label)
+		}
+		ebitentext.Draw(screen, text, f, op)
+		_, height := ebitentext.Measure(text, f, 0)
+		if n == 0 {
+			heightOffset += height + headerLineSpacing
+		} else {
+			heightOffset += height + lineSpacing
+		}
 	}
 }
 
@@ -157,15 +174,17 @@ func main() {
 				OnStart: func(ctx context.Context) error {
 					ebiten.SetWindowSize(screenWidth, screenHeight)
 					ebiten.SetWindowTitle("Computação Gráfica - Trabalho 3")
-					if err := ebiten.RunGame(g); err != nil {
-						return err
-					}
+					return nil
+				},
+				OnStop: func(ctx context.Context) error {
 					return nil
 				},
 			})
 			return g
 		}),
-		fx.Invoke(func(g *Game) {}),
+		fx.Invoke(func(g *Game) error {
+			return ebiten.RunGame(g)
+		}),
 	).Run()
 
 }
