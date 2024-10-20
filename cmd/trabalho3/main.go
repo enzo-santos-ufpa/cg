@@ -85,7 +85,7 @@ func main() {
 				TextFont: textFont,
 				options: []OpcaoMenu{
 					NewOpcaoDesenharLinha(),
-					NewOpcaoVazia("Desenhar círculo"),
+					NewOpcaoDesenharCirculo(),
 					NewOpcaoVazia("Desenhar elipse"),
 					NewOpcaoVazia("Desenhar curva de Bezier (grau 2)"),
 					NewOpcaoVazia("Desenhar curva de Bezier (grau 3)"),
