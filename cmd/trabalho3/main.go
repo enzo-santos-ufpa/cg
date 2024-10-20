@@ -34,10 +34,10 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 
 type OpcaoMenu interface {
 	Title() string
-	Create() ModuloGame
+	Create() ModuloJogo
 }
 
-type ModuloGame interface {
+type ModuloJogo interface {
 	Update() error
 	Draw(screen *ebiten.Image, face *ebitentext.GoTextFace, dy int)
 }

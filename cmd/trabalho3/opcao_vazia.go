@@ -17,14 +17,14 @@ func (o *opcaoVazia) Title() string {
 	return o.Label
 }
 
-func (o *opcaoVazia) Create() ModuloGame {
+func (o *opcaoVazia) Create() ModuloJogo {
 	return &moduloVazio{}
 }
 
 type moduloVazio struct{}
 
-func (m moduloVazio) Update() error {
+func (m *moduloVazio) Update() error {
 	return nil
 }
 
-func (m moduloVazio) Draw(_ *ebiten.Image, _ *ebitentext.GoTextFace, _ int) {}
+func (m *moduloVazio) Draw(_ *ebiten.Image, _ *ebitentext.GoTextFace, _ int) {}

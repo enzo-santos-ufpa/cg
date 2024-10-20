@@ -31,7 +31,7 @@ func (o *opcaoDesenharLinha) Title() string {
 	return "Desenhar linha"
 }
 
-func (o *opcaoDesenharLinha) Create() ModuloGame {
+func (o *opcaoDesenharLinha) Create() ModuloJogo {
 	return &moduloDesenhaLinha{}
 }
 

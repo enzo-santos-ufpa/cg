@@ -9,7 +9,7 @@ import (
 
 type JogoSecundario struct {
 	Source *ebitentext.GoTextFaceSource
-	Modulo ModuloGame
+	Modulo ModuloJogo
 }
 
 func (j *JogoSecundario) Update() error {
