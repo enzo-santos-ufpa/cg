@@ -27,8 +27,14 @@ func NewAlgoritmoBresenham(p1, p2 Ponto) AlgoritmoLinha {
 		pB = Ponto{X: pB.X, Y: -pB.Y}
 		trocaY = true
 	}
+	var algoritmo AlgoritmoLinha
+	if pA.X < pB.X {
+		algoritmo = NewAlgoritmoBresenham1Octante(pA, pB)
+	} else {
+		algoritmo = NewAlgoritmoBresenham1Octante(pB, pA)
+	}
 	return &AlgoritmoBresenham{
-		algoritmo: NewAlgoritmoBresenham1Octante(pA, pB),
+		algoritmo: algoritmo,
 		trocaX:    trocaX,
 		trocaY:    trocaY,
 		trocaXY:   trocaXY,
