@@ -154,20 +154,17 @@ func main() {
 			}
 			lc.Append(fx.Hook{
 				OnStart: func(ctx context.Context) error {
+					ebiten.SetWindowSize(screenWidth, screenHeight)
+					ebiten.SetWindowTitle("Computação Gráfica - Trabalho 3")
+					if err := ebiten.RunGame(g); err != nil {
+						return err
+					}
 					return nil
 				},
 			})
 			return g
-
 		}),
-		fx.Invoke(func(g *Game) error {
-			ebiten.SetWindowSize(screenWidth, screenHeight)
-			ebiten.SetWindowTitle("Computação Gráfica - Trabalho 3")
-			if err := ebiten.RunGame(g); err != nil {
-				return err
-			}
-			return nil
-		}),
+		fx.Invoke(func(g *Game) {}),
 	).Run()
 
 }
