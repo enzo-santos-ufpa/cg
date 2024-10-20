@@ -18,9 +18,10 @@ type desenharLinhaGame struct {
 	pontoA *ufpa_cg.Ponto
 	pontoB *ufpa_cg.Ponto
 
-	pontoAtual *ufpa_cg.Ponto
-	cursorX    int
-	cursorY    int
+	pontoAtual  *ufpa_cg.Ponto
+	pontosLinha []ufpa_cg.Ponto
+	cursorX     int
+	cursorY     int
 }
 
 func (g *desenharLinhaGame) Update() error {
@@ -30,16 +31,26 @@ func (g *desenharLinhaGame) Update() error {
 
 	// Seleciona o ponto atual da tela
 	if ponto := g.pontoAtual; inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && ponto != nil {
-		if g.pontoA == nil {
+		if pontoA := g.pontoA; pontoA == nil {
 			g.pontoA = &ufpa_cg.Ponto{X: ponto.X, Y: ponto.Y}
 		} else if g.pontoB == nil {
-			g.pontoB = &ufpa_cg.Ponto{X: ponto.X, Y: ponto.Y}
+			pontoB := ufpa_cg.Ponto{X: ponto.X, Y: ponto.Y}
+			g.pontoB = &pontoB
+
+			// Calcula a reta para os dois pontos selecionados
+			pontos := make([]ufpa_cg.Ponto, 0)
+			algoritmo := ufpa_cg.NewAlgoritmoBresenham(*pontoA, pontoB)
+			for algoritmo.Move() {
+				pontos = append(pontos, algoritmo.PontoAtual())
+			}
+			g.pontosLinha = pontos
 		}
 	}
 	// Reseta o estado da tela após os dois pontos tiverem sidos selecionados
 	if g.pontoA != nil && g.pontoB != nil && repeatingKeyPressed(ebiten.KeySpace) {
 		g.pontoA = nil
 		g.pontoB = nil
+		g.pontosLinha = nil
 	}
 	return nil
 }
@@ -72,16 +83,8 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 	_, h := ebitentext.Measure(text, f, 0)
 	heightOffset := int(h) + 20
 
-	// Calcula a reta caso os dois pontos tenham sido selecionados
 	pontoA := g.pontoA
 	pontoB := g.pontoB
-	pontosLinha := make([]ufpa_cg.Ponto, 0)
-	if pontoA != nil && pontoB != nil {
-		algoritmo := ufpa_cg.NewAlgoritmoBresenham(*pontoA, *pontoB)
-		for algoritmo.Move() {
-			pontosLinha = append(pontosLinha, algoritmo.PontoAtual())
-		}
-	}
 
 	// Percorre o grid de pontos
 	for j := minY; j <= maxY; j++ {
@@ -99,7 +102,7 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 			} else if (pontoA != nil && *pontoA == ponto) || // Se este ponto for o ponto A selecionado
 				(pontoB != nil && *pontoB == ponto) { // Se este ponto for o ponto B selecionado
 				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
-			} else if len(pontosLinha) > 0 && slices.Contains(pontosLinha, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
+			} else if len(g.pontosLinha) > 0 && slices.Contains(g.pontosLinha, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
 				pixel.Fill(filledColor) // Marca este ponto como "NA RETA"
 			} else if i == 0 || j == 0 { // Se este ponto estiver em algum dos eixos X ou Y
 				pixel.Fill(defaultOriginColor) // Marca este ponto como "NÃO SELECIONADO, NA ORIGEM"
@@ -151,7 +154,7 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (g *desenharLinhaGame) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *desenharLinhaGame) Layout(_, _ int) (screenWidth, screenHeight int) {
 	return screenWidth, screenHeight
 }
 
