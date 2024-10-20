@@ -139,30 +139,6 @@ type ModuloGame interface {
 	Draw(screen *ebiten.Image, face *ebitentext.GoTextFace, dy int)
 }
 
-type opcaoVazia struct {
-	Label string
-}
-
-func NewOpcaoVazia(label string) OpcaoMenu {
-	return &opcaoVazia{Label: label}
-}
-
-func (o *opcaoVazia) Title() string {
-	return o.Label
-}
-
-func (o *opcaoVazia) Create() ModuloGame {
-	return &moduloVazio{}
-}
-
-type moduloVazio struct{}
-
-func (m moduloVazio) Update() error {
-	return nil
-}
-
-func (m moduloVazio) Draw(_ *ebiten.Image, _ *ebitentext.GoTextFace, _ int) {}
-
 type SubGame struct {
 	Source *ebitentext.GoTextFaceSource
 	Modulo ModuloGame
