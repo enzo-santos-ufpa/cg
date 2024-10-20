@@ -28,11 +28,7 @@ func (c *configuracoesDesenharLinha) Evaluate() []ufpa_cg.Ponto {
 }
 
 type moduloDesenhaLinha struct {
-	pontoAtual *ufpa_cg.Ponto
-	output     []ufpa_cg.Ponto
-	cursorX    int
-	cursorY    int
-	settings   *configuracoesDesenharLinha
+	settings *configuracoesDesenharLinha
 }
 
 type opcaoDesenharLinha struct{}
