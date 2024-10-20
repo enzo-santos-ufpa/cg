@@ -26,7 +26,7 @@ func (j *Jogo) Update() error {
 		case repeatingKeyPressed(ebiten.KeyUp) && j.selectingIndex > 0:
 			j.selectingIndex--
 		case repeatingKeyPressed(ebiten.KeyEnter) || repeatingKeyPressed(ebiten.KeyNumpadEnter):
-			j.menu = &SubGame{
+			j.menu = &JogoSecundario{
 				Source: j.TextFont.Source,
 				Modulo: j.options[j.selectingIndex].Create(),
 			}

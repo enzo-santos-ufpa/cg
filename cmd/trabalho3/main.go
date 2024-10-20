@@ -9,8 +9,6 @@ import (
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"golang.org/x/text/language"
-	"image/color"
 	"log"
 )
 
@@ -42,38 +40,6 @@ type OpcaoMenu interface {
 type ModuloGame interface {
 	Update() error
 	Draw(screen *ebiten.Image, face *ebitentext.GoTextFace, dy int)
-}
-
-type SubGame struct {
-	Source *ebitentext.GoTextFaceSource
-	Modulo ModuloGame
-}
-
-func (m *SubGame) Update() error {
-	return m.Modulo.Update()
-}
-
-func (m *SubGame) Draw(screen *ebiten.Image) {
-	f := &ebitentext.GoTextFace{
-		Source:    m.Source,
-		Direction: ebitentext.DirectionLeftToRight,
-		Size:      16,
-		Language:  language.BrazilianPortuguese,
-	}
-
-	// Desenha texto "Pressione ESC para voltar" no topo
-	op := &ebitentext.DrawOptions{}
-	op.ColorScale.ScaleWithColor(color.White)
-	op.GeoM.Translate(10, 10)
-	text := "Pressione ESC para voltar"
-	ebitentext.Draw(screen, text, f, op)
-	_, h := ebitentext.Measure(text, f, 0)
-
-	m.Modulo.Draw(screen, f, int(h)+20)
-}
-
-func (m *SubGame) Layout(_, _ int) (screenWidth, screenHeight int) {
-	return screenWidth, screenHeight
 }
 
 type TextFont struct {
