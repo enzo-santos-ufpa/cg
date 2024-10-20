@@ -35,18 +35,18 @@ func (o *opcaoDesenharLinha) Create() ModuloJogo {
 	return &moduloDesenhaLinha{}
 }
 
-func (g *moduloDesenhaLinha) Update() error {
+func (m *moduloDesenhaLinha) Update() error {
 	x, y := ebiten.CursorPosition()
-	g.cursorX = x
-	g.cursorY = y
+	m.cursorX = x
+	m.cursorY = y
 
 	// Seleciona o ponto atual da tela
-	if ponto := g.pontoAtual; inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && ponto != nil {
-		if pontoA := g.pontoA; pontoA == nil {
-			g.pontoA = &ufpa_cg.Ponto{X: ponto.X, Y: ponto.Y}
-		} else if g.pontoB == nil {
+	if ponto := m.pontoAtual; inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && ponto != nil {
+		if pontoA := m.pontoA; pontoA == nil {
+			m.pontoA = &ufpa_cg.Ponto{X: ponto.X, Y: ponto.Y}
+		} else if m.pontoB == nil {
 			pontoB := ufpa_cg.Ponto{X: ponto.X, Y: ponto.Y}
-			g.pontoB = &pontoB
+			m.pontoB = &pontoB
 
 			// Calcula a reta para os dois pontos selecionados
 			pontos := make([]ufpa_cg.Ponto, 0)
@@ -54,19 +54,19 @@ func (g *moduloDesenhaLinha) Update() error {
 			for algoritmo.Move() {
 				pontos = append(pontos, algoritmo.PontoAtual())
 			}
-			g.pontosLinha = pontos
+			m.pontosLinha = pontos
 		}
 	}
 	// Reseta o estado da tela após os dois pontos tiverem sidos selecionados
-	if g.pontoA != nil && g.pontoB != nil && repeatingKeyPressed(ebiten.KeySpace) {
-		g.pontoA = nil
-		g.pontoB = nil
-		g.pontosLinha = nil
+	if m.pontoA != nil && m.pontoB != nil && repeatingKeyPressed(ebiten.KeySpace) {
+		m.pontoA = nil
+		m.pontoB = nil
+		m.pontosLinha = nil
 	}
 	return nil
 }
 
-func (g *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoTextFace, dy int) {
+func (m *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoTextFace, dy int) {
 	heightOffset := dy
 
 	const pointSize = 10       // Tamanho de um ponto, em pixels
@@ -80,8 +80,8 @@ func (g *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoT
 	var defaultColor = color.RGBA{R: 0xFF, G: 0xFF, B: 0xFF, A: 0xFF}       // Cor para um ponto x != 0 && y != 0
 	var defaultOriginColor = color.RGBA{R: 0x91, G: 0x91, B: 0x91, A: 0xFF} // Cor para um ponto x == 0 || y == 0
 
-	pontoA := g.pontoA
-	pontoB := g.pontoB
+	pontoA := m.pontoA
+	pontoB := m.pontoB
 
 	var hoveringPoint *ufpa_cg.Ponto
 	// Percorre o grid de pontos
@@ -93,14 +93,14 @@ func (g *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoT
 			ponto := ufpa_cg.Ponto{X: i, Y: -j}
 			pixel := ebiten.NewImage(pointSize, pointSize)
 			if (pontoA == nil || pontoB == nil) && // Se algum ponto não tiver sido selecionado
-				(x <= g.cursorX && g.cursorX <= x+pointSize) && // Se a posição X do cursor estiver dentro deste ponto
-				(y <= g.cursorY && g.cursorY <= y+pointSize) { // Se a posição Y do cursor estiver dentro deste ponto
+				(x <= m.cursorX && m.cursorX <= x+pointSize) && // Se a posição X do cursor estiver dentro deste ponto
+				(y <= m.cursorY && m.cursorY <= y+pointSize) { // Se a posição Y do cursor estiver dentro deste ponto
 				pixel.Fill(hoveredColor) // Marca este ponto como "EM SELEÇÃO"
 				hoveringPoint = &ponto
 			} else if (pontoA != nil && *pontoA == ponto) || // Se este ponto for o ponto A selecionado
 				(pontoB != nil && *pontoB == ponto) { // Se este ponto for o ponto B selecionado
 				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
-			} else if len(g.pontosLinha) > 0 && slices.Contains(g.pontosLinha, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
+			} else if len(m.pontosLinha) > 0 && slices.Contains(m.pontosLinha, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
 				pixel.Fill(filledColor) // Marca este ponto como "NA RETA"
 			} else if i == 0 || j == 0 { // Se este ponto estiver em algum dos eixos X ou Y
 				pixel.Fill(defaultOriginColor) // Marca este ponto como "NÃO SELECIONADO, NA ORIGEM"
@@ -119,7 +119,7 @@ func (g *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoT
 
 	hasHoveringEntry := false
 	var hoveringEntryDx, hoveringEntryDy int
-	for i, ponto := range []*ufpa_cg.Ponto{g.pontoA, g.pontoB} {
+	for i, ponto := range []*ufpa_cg.Ponto{m.pontoA, m.pontoB} {
 		const dx = 20
 
 		op := &ebitentext.DrawOptions{}
@@ -142,10 +142,10 @@ func (g *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoT
 		heightOffset += int(h) + 5
 	}
 	if ponto := hoveringPoint; ponto != nil && hasHoveringEntry {
-		g.pontoAtual = ponto
+		m.pontoAtual = ponto
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y), hoveringEntryDx, hoveringEntryDy)
 	} else {
-		g.pontoAtual = nil
+		m.pontoAtual = nil
 	}
 	if pontoA != nil && pontoB != nil {
 		op := &ebitentext.DrawOptions{}
