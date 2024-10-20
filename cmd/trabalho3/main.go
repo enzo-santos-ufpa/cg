@@ -10,6 +10,7 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"log"
+	"ufpa_cg"
 )
 
 const (
@@ -32,6 +33,19 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 	return false
 }
 
+type EntradaModulo interface {
+	Consume(ponto ufpa_cg.Ponto)
+	Evaluated() bool
+	Selected(ponto ufpa_cg.Ponto) bool
+	Describe() string
+	Reset()
+}
+
+type ConfiguracaoModulo interface {
+	Inputs() []EntradaModulo
+	Evaluate() []ufpa_cg.Ponto
+}
+
 type OpcaoMenu interface {
 	Title() string
 	Create() ModuloJogo
@@ -39,6 +53,7 @@ type OpcaoMenu interface {
 
 type ModuloJogo interface {
 	Update() error
+	Settings() ConfiguracaoModulo
 	Draw(screen *ebiten.Image, face *ebitentext.GoTextFace, dy int)
 }
 
