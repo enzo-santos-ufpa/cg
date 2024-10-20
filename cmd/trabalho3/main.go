@@ -9,8 +9,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"golang.org/x/text/language"
 	"image/color"
+	"log"
 )
 
 const (
@@ -129,27 +131,24 @@ type TextFont struct {
 //go:embed Arial.ttf
 var arialTtf []byte
 
+type AppData struct {
+	Logger    *zap.Logger
+	ErrorChan <-chan error
+}
+
 func main() {
-	fx.New(
+	var data *AppData
+	app := fx.New(
 		fx.Provide(func(lc fx.Lifecycle) (*TextFont, error) {
 			source, err := ebitentext.NewGoTextFaceSource(bytes.NewReader(arialTtf))
 			if err != nil {
 				return nil, err
 			}
-			lc.Append(fx.Hook{
-				OnStart: func(ctx context.Context) error {
-					return nil
-				},
-				OnStop: func(ctx context.Context) error {
-					return nil
-				},
-			})
-			return &TextFont{
-				Source: source,
-			}, nil
+			return &TextFont{Source: source}, nil
 		}),
-		fx.Provide(func(lc fx.Lifecycle, textFont *TextFont) *Game {
-			g := &Game{
+		fx.Provide(zap.NewProduction),
+		fx.Provide(func(lc fx.Lifecycle, textFont *TextFont, logger *zap.Logger) *AppData {
+			game := &Game{
 				TextFont: textFont,
 				choices: []string{
 					"Desenhar linha",
@@ -170,37 +169,47 @@ func main() {
 					"Projetar perpectiva",
 				},
 			}
+
+			errc := make(chan error, 1)
 			lc.Append(fx.Hook{
 				OnStart: func(ctx context.Context) error {
-					ebiten.SetWindowSize(screenWidth, screenHeight)
-					ebiten.SetWindowTitle("Computação Gráfica - Trabalho 3")
-					return nil
-				},
-				OnStop: func(ctx context.Context) error {
-					return nil
+					go func() {
+						defer close(errc)
+
+						ebiten.SetWindowSize(screenWidth, screenHeight)
+						ebiten.SetWindowTitle("Computação Gráfica - Trabalho 3")
+						if err := ebiten.RunGame(game); err != nil {
+							errc <- err
+						}
+					}()
+
+					select {
+					case err := <-errc:
+						return err
+					default:
+						return nil
+					}
 				},
 			})
-			return g
+			return &AppData{
+				Logger:    logger,
+				ErrorChan: errc,
+			}
 		}),
-		fx.Invoke(func(g *Game) error {
-			return ebiten.RunGame(g)
-		}),
-	).Run()
+		fx.Populate(&data),
+	)
 
+	ctx := context.Background()
+	if err := app.Start(ctx); err != nil {
+		log.Fatal(err)
+	}
+	select {
+	case signal := <-app.Done():
+		data.Logger.Info("Received signal", zap.String("signal", signal.String()))
+	case err := <-data.ErrorChan:
+		data.Logger.Error("ok", zap.Error(err))
+	}
+	if err := app.Stop(ctx); err != nil {
+		log.Fatal(err)
+	}
 }
-
-//func (g *Game) Draw(screen *ebiten.Image) {
-//	const factor float64 = 10
-//
-//	r := image.Rect(10, 10, 20, 20)
-//	i := ebiten.NewImage(r.Dx(), r.Dy())
-//	i.Fill(color.RGBA{R: 0, G: 255, B: 0, A: 255})
-//
-//	gm := ebiten.GeoM{}
-//	gm.Translate(10, 10)
-//	screen.DrawImage(i, &ebiten.DrawImageOptions{
-//		GeoM: gm,
-//	})
-//	//screen.Set(10, 10, color.RGBA{0, 255, 0, 0})
-//
-//}
