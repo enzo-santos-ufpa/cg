@@ -35,16 +35,11 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 	return false
 }
 
-type TelaOpcao interface {
-	Game() ebiten.Game
-	Titulo() string
-}
-
 type Game struct {
 	TextFont *TextFont
 
 	menu           ebiten.Game
-	choices        []string
+	options        []OpcaoMenu
 	selectingIndex int
 }
 
@@ -52,12 +47,15 @@ func (g *Game) Update() error {
 	menu := g.menu
 	if menu == nil {
 		switch {
-		case repeatingKeyPressed(ebiten.KeyDown) && g.selectingIndex < len(g.choices)-1:
+		case repeatingKeyPressed(ebiten.KeyDown) && g.selectingIndex < len(g.options)-1:
 			g.selectingIndex++
 		case repeatingKeyPressed(ebiten.KeyUp) && g.selectingIndex > 0:
 			g.selectingIndex--
 		case repeatingKeyPressed(ebiten.KeyEnter) || repeatingKeyPressed(ebiten.KeyNumpadEnter):
-			g.menu = NewTelaDesenharLinha(g.TextFont).Game()
+			g.menu = &SubGame{
+				Source: g.TextFont.Source,
+				Modulo: g.options[g.selectingIndex].Create(),
+			}
 		}
 
 	} else {
@@ -85,7 +83,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	const fontSize = 16             // Tamanho da fonte de cada texto nessa tela
 
 	heightOffset := headerHeightOffset
-	for n, label := range append([]string{"Menu de opções"}, g.choices...) {
+
+	// Constrói lista de opções do menu principal
+	labels := make([]string, len(g.options)+1)
+	labels[0] = "Menu de opções"
+	for i, module := range g.options {
+		labels[i+1] = module.Title()
+	}
+	for n, label := range labels {
 		i := n - 1
 		op := &ebitentext.DrawOptions{}
 		if n == 0 {
@@ -124,6 +129,72 @@ func (g *Game) Layout(_, _ int) (int, int) {
 	return screenWidth, screenHeight
 }
 
+type OpcaoMenu interface {
+	Title() string
+	Create() ModuloGame
+}
+
+type ModuloGame interface {
+	Update() error
+	Draw(screen *ebiten.Image, face *ebitentext.GoTextFace, dy int)
+}
+
+type opcaoVazia struct {
+	Label string
+}
+
+func NewOpcaoVazia(label string) OpcaoMenu {
+	return &opcaoVazia{Label: label}
+}
+
+func (o *opcaoVazia) Title() string {
+	return o.Label
+}
+
+func (o *opcaoVazia) Create() ModuloGame {
+	return &moduloVazio{}
+}
+
+type moduloVazio struct{}
+
+func (m moduloVazio) Update() error {
+	return nil
+}
+
+func (m moduloVazio) Draw(_ *ebiten.Image, _ *ebitentext.GoTextFace, _ int) {}
+
+type SubGame struct {
+	Source *ebitentext.GoTextFaceSource
+	Modulo ModuloGame
+}
+
+func (m *SubGame) Update() error {
+	return m.Modulo.Update()
+}
+
+func (m *SubGame) Draw(screen *ebiten.Image) {
+	f := &ebitentext.GoTextFace{
+		Source:    m.Source,
+		Direction: ebitentext.DirectionLeftToRight,
+		Size:      16,
+		Language:  language.BrazilianPortuguese,
+	}
+
+	// Desenha texto "Pressione ESC para voltar" no topo
+	op := &ebitentext.DrawOptions{}
+	op.ColorScale.ScaleWithColor(color.White)
+	op.GeoM.Translate(10, 10)
+	text := "Pressione ESC para voltar"
+	ebitentext.Draw(screen, text, f, op)
+	_, h := ebitentext.Measure(text, f, 0)
+
+	m.Modulo.Draw(screen, f, int(h)+20)
+}
+
+func (m *SubGame) Layout(_, _ int) (screenWidth, screenHeight int) {
+	return screenWidth, screenHeight
+}
+
 type TextFont struct {
 	Source *ebitentext.GoTextFaceSource
 }
@@ -150,23 +221,23 @@ func main() {
 		fx.Provide(func(lc fx.Lifecycle, textFont *TextFont, logger *zap.Logger) *AppData {
 			game := &Game{
 				TextFont: textFont,
-				choices: []string{
-					"Desenhar linha",
-					"Desenhar círculo",
-					"Desenhar elipse",
-					"Desenhar curva de Bezier (grau 2)",
-					"Desenhar curva de Bezier (grau 3)",
-					"Desenhar polilinha",
-					"Preencher por recursão",
-					"Preencher por varredura",
-					"Recortar linha",
-					"Recortar polígono",
-					"Transformar por rotação",
-					"Transformar por translação",
-					"Transformar por escala",
-					"Projetar ortogonal",
-					"Projetar oblíqua",
-					"Projetar perpectiva",
+				options: []OpcaoMenu{
+					NewOpcaoDesenharLinha(),
+					NewOpcaoVazia("Desenhar círculo"),
+					NewOpcaoVazia("Desenhar elipse"),
+					NewOpcaoVazia("Desenhar curva de Bezier (grau 2)"),
+					NewOpcaoVazia("Desenhar curva de Bezier (grau 3)"),
+					NewOpcaoVazia("Desenhar polilinha"),
+					NewOpcaoVazia("Preencher por recursão"),
+					NewOpcaoVazia("Preencher por varredura"),
+					NewOpcaoVazia("Recortar linha"),
+					NewOpcaoVazia("Recortar polígono"),
+					NewOpcaoVazia("Transformar por rotação"),
+					NewOpcaoVazia("Transformar por translação"),
+					NewOpcaoVazia("Transformar por escola"),
+					NewOpcaoVazia("Realizar projeção ortogonal"),
+					NewOpcaoVazia("Realizar projeção oblíqua"),
+					NewOpcaoVazia("Realizar projeção perspectiva"),
 				},
 			}
 

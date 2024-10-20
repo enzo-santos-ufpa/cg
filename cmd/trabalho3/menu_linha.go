@@ -6,15 +6,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
-	"golang.org/x/text/language"
 	"image/color"
 	"slices"
 	"ufpa_cg"
 )
 
-type desenharLinhaGame struct {
-	TextFont *TextFont
-
+type moduloDesenhaLinha struct {
 	pontoA *ufpa_cg.Ponto
 	pontoB *ufpa_cg.Ponto
 
@@ -24,7 +21,21 @@ type desenharLinhaGame struct {
 	cursorY     int
 }
 
-func (g *desenharLinhaGame) Update() error {
+type opcaoDesenharLinha struct{}
+
+func NewOpcaoDesenharLinha() OpcaoMenu {
+	return &opcaoDesenharLinha{}
+}
+
+func (o *opcaoDesenharLinha) Title() string {
+	return "Desenhar linha"
+}
+
+func (o *opcaoDesenharLinha) Create() ModuloGame {
+	return &moduloDesenhaLinha{}
+}
+
+func (g *moduloDesenhaLinha) Update() error {
 	x, y := ebiten.CursorPosition()
 	g.cursorX = x
 	g.cursorY = y
@@ -55,13 +66,8 @@ func (g *desenharLinhaGame) Update() error {
 	return nil
 }
 
-func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
-	f := &ebitentext.GoTextFace{
-		Source:    g.TextFont.Source,
-		Direction: ebitentext.DirectionLeftToRight,
-		Size:      16,
-		Language:  language.BrazilianPortuguese,
-	}
+func (g *moduloDesenhaLinha) Draw(screen *ebiten.Image, textFace *ebitentext.GoTextFace, dy int) {
+	heightOffset := dy
 
 	const pointSize = 10       // Tamanho de um ponto, em pixels
 	const pointSpacing = 3     // Espaçamento entre um ponto e outro, em pixels
@@ -73,15 +79,6 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 	var filledColor = color.RGBA{R: 0xFF, G: 0x62, B: 0x00, A: 0xFF}        // Cor para um ponto na linha formada
 	var defaultColor = color.RGBA{R: 0xFF, G: 0xFF, B: 0xFF, A: 0xFF}       // Cor para um ponto x != 0 && y != 0
 	var defaultOriginColor = color.RGBA{R: 0x91, G: 0x91, B: 0x91, A: 0xFF} // Cor para um ponto x == 0 || y == 0
-
-	// Desenha texto "Pressione ESC para voltar" no topo
-	op := &ebitentext.DrawOptions{}
-	op.ColorScale.ScaleWithColor(color.White)
-	op.GeoM.Translate(10, 10)
-	text := "Pressione ESC para voltar"
-	ebitentext.Draw(screen, text, f, op)
-	_, h := ebitentext.Measure(text, f, 0)
-	heightOffset := int(h) + 20
 
 	pontoA := g.pontoA
 	pontoB := g.pontoB
@@ -129,8 +126,8 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 		op.ColorScale.ScaleWithColor(color.White)
 		op.GeoM.Translate(dx, float64(heightOffset))
 		text := fmt.Sprintf("Selecione o ponto %c:", rune(i+'A'))
-		ebitentext.Draw(screen, text, f, op)
-		w, h := ebitentext.Measure(text, f, 0)
+		ebitentext.Draw(screen, text, textFace, op)
+		w, h := ebitentext.Measure(text, textFace, 0)
 		if ponto == nil {
 			hasHoveringEntry = true
 			hoveringEntryDx = dx + int(w) + 10
@@ -140,7 +137,7 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 			op := &ebitentext.DrawOptions{}
 			op.ColorScale.ScaleWithColor(color.White)
 			op.GeoM.Translate(dx+w+10, float64(heightOffset))
-			ebitentext.Draw(screen, fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y), f, op)
+			ebitentext.Draw(screen, fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y), textFace, op)
 		}
 		heightOffset += int(h) + 5
 	}
@@ -154,30 +151,6 @@ func (g *desenharLinhaGame) Draw(screen *ebiten.Image) {
 		op := &ebitentext.DrawOptions{}
 		op.ColorScale.ScaleWithColor(color.White)
 		op.GeoM.Translate(20, float64(heightOffset))
-		ebitentext.Draw(screen, "Pressione ESPAÇO para refazer", f, op)
+		ebitentext.Draw(screen, "Pressione ESPAÇO para refazer", textFace, op)
 	}
-}
-
-func (g *desenharLinhaGame) Layout(_, _ int) (screenWidth, screenHeight int) {
-	return screenWidth, screenHeight
-}
-
-type telaDesenharLinha struct {
-	TextFont *TextFont
-}
-
-func NewTelaDesenharLinha(textFont *TextFont) TelaOpcao {
-	return &telaDesenharLinha{
-		TextFont: textFont,
-	}
-}
-
-func (l telaDesenharLinha) Game() ebiten.Game {
-	return &desenharLinhaGame{
-		TextFont: l.TextFont,
-	}
-}
-
-func (l telaDesenharLinha) Titulo() string {
-	return "Desenhar linha"
 }
