@@ -65,7 +65,7 @@ func (o *opcaoDesenharCirculo) Title() string {
 func (o *opcaoDesenharCirculo) Create() ModuloJogo {
 	return &moduloDesenhaCirculo{
 		settings: &configuracoesDesenharCirculo{
-			pontoA: &entradaPonto{},
+			pontoA: &entradaPonto{Label: "centro"},
 		},
 	}
 }

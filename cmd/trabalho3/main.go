@@ -9,6 +9,7 @@ import (
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
+	"image/color"
 	"log"
 	"ufpa_cg"
 )
@@ -34,18 +35,21 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 }
 
 type EntradaModulo interface {
-	Consume(ponto ufpa_cg.Ponto)
 	Evaluated() bool
 	Selected(ponto ufpa_cg.Ponto) bool
-	Describe() string
+	DescribeLabel() string
+	DescribeValue() string
 	Reset()
+	OnDisplay() (string, bool)
+	OnUpdate()
+	OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool)
 }
 
 type ConfiguracaoModulo interface {
 	Inputs() []EntradaModulo
+
 	Evaluate() []ufpa_cg.Ponto
 }
-
 type OpcaoMenu interface {
 	Title() string
 	Create() ModuloJogo

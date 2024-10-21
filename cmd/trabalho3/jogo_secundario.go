@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"golang.org/x/text/language"
 	"image/color"
@@ -16,17 +15,10 @@ type JogoSecundario struct {
 	Source *ebitentext.GoTextFaceSource
 	Modulo ModuloJogo
 
-	cursorX    int
-	cursorY    int
-	pontoAtual *ufpa_cg.Ponto
-	output     []ufpa_cg.Ponto
+	output []ufpa_cg.Ponto
 }
 
 func (j *JogoSecundario) Update() error {
-	x, y := ebiten.CursorPosition()
-	j.cursorX = x
-	j.cursorY = y
-
 	settings := j.Modulo.Settings()
 	if settings == nil {
 		return nil
@@ -38,11 +30,9 @@ func (j *JogoSecundario) Update() error {
 		if inp.Evaluated() {
 			continue
 		}
+		inp.OnUpdate()
 		allEvaluated = false
-		if ponto := j.pontoAtual; inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && ponto != nil {
-			inp.Consume(*ponto)
-			break
-		}
+		break
 	}
 	if allEvaluated {
 		// Calcula a reta para as entradas selecionadas
@@ -84,7 +74,6 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 	const minX, maxX = -11, 11 // Intervalo de X para o grid de pontos
 	const minY, maxY = -11, 11 // Intervalo de Y para o grid de pontos
 
-	var hoveredColor = color.RGBA{R: 0x00, G: 0x00, B: 0xFF, A: 0xFF}       // Cor para um ponto com o cursor apontado
 	var selectedColor = color.RGBA{R: 0xFF, G: 0x00, B: 0x00, A: 0xFF}      // Cor para um ponto selecionado
 	var filledColor = color.RGBA{R: 0xFF, G: 0x62, B: 0x00, A: 0xFF}        // Cor para um ponto na linha formada
 	var defaultColor = color.RGBA{R: 0xFF, G: 0xFF, B: 0xFF, A: 0xFF}       // Cor para um ponto x != 0 && y != 0
@@ -95,15 +84,14 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		return
 	}
 
-	hasPendingInput := false
+	var currentInput EntradaModulo
 	for _, inp := range settings.Inputs() {
 		if !inp.Evaluated() {
-			hasPendingInput = true
+			currentInput = inp
 			break
 		}
 	}
 
-	var hoveringPoint *ufpa_cg.Ponto
 	// Percorre o grid de pontos
 	for j_ := minY; j_ <= maxY; j_++ {
 		for i := minX; i <= maxX; i++ {
@@ -120,12 +108,17 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 				}
 			}
 
+			var customColor color.Color
+			var ok bool
+			if currentInput == nil {
+				customColor, ok = nil, false
+			} else {
+				customColor, ok = currentInput.OnDraw(ponto, x, y, pointSize)
+			}
+
 			pixel := ebiten.NewImage(pointSize, pointSize)
-			if hasPendingInput && // Se algum ponto não tiver sido selecionado
-				(x <= j.cursorX && j.cursorX <= x+pointSize) && // Se a posição X do cursor estiver dentro deste ponto
-				(y <= j.cursorY && j.cursorY <= y+pointSize) { // Se a posição Y do cursor estiver dentro deste ponto
-				pixel.Fill(hoveredColor) // Marca este ponto como "EM SELEÇÃO"
-				hoveringPoint = &ponto
+			if ok {
+				pixel.Fill(customColor)
 			} else if selected { // Se este ponto for algum selecionado
 				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
 			} else if len(j.output) > 0 && slices.Contains(j.output, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
@@ -145,38 +138,35 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 	}
 	heightOffset += 40
 
-	hasHoveringEntry := false
-	var hoveringEntryDx, hoveringEntryDy int
-	for i, inp := range settings.Inputs() {
+	for _, inp := range settings.Inputs() {
 		const dx = 20
 
 		op := &ebitentext.DrawOptions{}
 		op.ColorScale.ScaleWithColor(color.White)
 		op.GeoM.Translate(dx, float64(heightOffset))
-		text := fmt.Sprintf("Selecione o ponto %c:", rune(i+'A'))
+		text := fmt.Sprintf("Selecione o %s:", inp.DescribeLabel())
 		ebitentext.Draw(screen, text, textFace, op)
 		w, h := ebitentext.Measure(text, textFace, 0)
 		if !inp.Evaluated() {
-			hasHoveringEntry = true
-			hoveringEntryDx = dx + int(w) + 10
-			hoveringEntryDy = heightOffset
+			if text, ok := inp.OnDisplay(); ok {
+				ebitenutil.DebugPrintAt(
+					screen,
+					text,
+					dx+int(w)+10,
+					heightOffset,
+				)
+			}
 			break
 		} else {
 			op := &ebitentext.DrawOptions{}
 			op.ColorScale.ScaleWithColor(color.White)
 			op.GeoM.Translate(dx+w+10, float64(heightOffset))
-			ebitentext.Draw(screen, inp.Describe(), textFace, op)
+			ebitentext.Draw(screen, inp.DescribeValue(), textFace, op)
 		}
 		heightOffset += int(h) + 5
 	}
-	if ponto := hoveringPoint; ponto != nil && hasHoveringEntry {
-		j.pontoAtual = ponto
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y), hoveringEntryDx, hoveringEntryDy)
-	} else {
-		j.pontoAtual = nil
-	}
 
-	if len(settings.Inputs()) > 0 && !hasPendingInput {
+	if len(settings.Inputs()) > 0 && currentInput == nil {
 		op := &ebitentext.DrawOptions{}
 		op.ColorScale.ScaleWithColor(color.White)
 		op.GeoM.Translate(20, float64(heightOffset))

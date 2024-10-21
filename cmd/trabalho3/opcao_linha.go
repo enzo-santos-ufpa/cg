@@ -44,8 +44,8 @@ func (o *opcaoDesenharLinha) Title() string {
 func (o *opcaoDesenharLinha) Create() ModuloJogo {
 	return &moduloDesenhaLinha{
 		settings: &configuracoesDesenharLinha{
-			pontoA: &entradaPonto{},
-			pontoB: &entradaPonto{},
+			pontoA: &entradaPonto{Label: "ponto A"},
+			pontoB: &entradaPonto{Label: "ponto B"},
 		},
 	}
 }
