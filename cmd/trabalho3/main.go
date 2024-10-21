@@ -90,7 +90,7 @@ func main() {
 				options: []OpcaoMenu{
 					NewOpcaoDesenharLinha(),
 					NewOpcaoDesenharCirculo(),
-					NewOpcaoVazia("Desenhar elipse"),
+					NewOpcaoDesenharElipse(),
 					NewOpcaoVazia("Desenhar curva de Bezier (grau 2)"),
 					NewOpcaoVazia("Desenhar curva de Bezier (grau 3)"),
 					NewOpcaoVazia("Desenhar polilinha"),
