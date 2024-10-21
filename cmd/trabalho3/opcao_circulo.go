@@ -7,11 +7,12 @@ import (
 )
 
 type configuracoesDesenharCirculo struct {
-	pontoA *entradaPonto
+	centro *entradaPonto
+	raio   *entradaInteiro
 }
 
 func (c *configuracoesDesenharCirculo) Inputs() []EntradaModulo {
-	return []EntradaModulo{c.pontoA}
+	return []EntradaModulo{c.centro, c.raio}
 }
 
 func gen8(ponto ufpa_cg.Ponto, centro ufpa_cg.Ponto) []ufpa_cg.Ponto {
@@ -28,9 +29,9 @@ func gen8(ponto ufpa_cg.Ponto, centro ufpa_cg.Ponto) []ufpa_cg.Ponto {
 }
 
 func (c *configuracoesDesenharCirculo) Evaluate() []ufpa_cg.Ponto {
-	centro := c.pontoA.ponto
+	centro := c.centro.ponto
+	r := c.raio.valor
 
-	r := 5
 	pontos := make([]ufpa_cg.Ponto, 0)
 	x := 0
 	y := r
@@ -65,7 +66,8 @@ func (o *opcaoDesenharCirculo) Title() string {
 func (o *opcaoDesenharCirculo) Create() ModuloJogo {
 	return &moduloDesenhaCirculo{
 		settings: &configuracoesDesenharCirculo{
-			pontoA: &entradaPonto{Label: "centro"},
+			centro: &entradaPonto{Label: "centro"},
+			raio:   &entradaInteiro{Label: "raio"},
 		},
 	}
 }
