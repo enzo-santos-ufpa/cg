@@ -14,13 +14,36 @@ func (c *configuracoesDesenharCirculo) Inputs() []EntradaModulo {
 	return []EntradaModulo{c.pontoA}
 }
 
-func (c *configuracoesDesenharCirculo) Evaluate() []ufpa_cg.Ponto {
-	pontoA := c.pontoA.ponto
+func gen8(ponto ufpa_cg.Ponto, centro ufpa_cg.Ponto) []ufpa_cg.Ponto {
+	return []ufpa_cg.Ponto{
+		{X: ponto.X + centro.X, Y: ponto.Y + centro.Y},
+		{X: ponto.Y + centro.X, Y: ponto.X + centro.Y},
+		{X: ponto.Y + centro.X, Y: -ponto.X + centro.Y},
+		{X: ponto.X + centro.X, Y: -ponto.Y + centro.Y},
+		{X: -ponto.X + centro.X, Y: -ponto.Y + centro.Y},
+		{X: -ponto.Y + centro.X, Y: -ponto.X + centro.Y},
+		{X: -ponto.Y + centro.X, Y: ponto.X + centro.Y},
+		{X: -ponto.X + centro.X, Y: ponto.Y + centro.Y},
+	}
+}
 
+func (c *configuracoesDesenharCirculo) Evaluate() []ufpa_cg.Ponto {
+	centro := c.pontoA.ponto
+
+	r := 5
 	pontos := make([]ufpa_cg.Ponto, 0)
-	algoritmo := ufpa_cg.NewAlgoritmoBresenham(pontoA, ufpa_cg.Ponto{X: pontoA.X + 3, Y: pontoA.Y - 3})
-	for algoritmo.Move() {
-		pontos = append(pontos, algoritmo.PontoAtual())
+	x := 0
+	y := r
+	e := -r
+	pontos = append(pontos, gen8(ufpa_cg.Ponto{X: 0, Y: r}, centro)...)
+	for x <= y {
+		e += 2*x + 1
+		x++
+		if e >= 0 {
+			e += 2 - 2*y
+			y--
+		}
+		pontos = append(pontos, gen8(ufpa_cg.Ponto{X: x, Y: y}, centro)...)
 	}
 	return pontos
 }
