@@ -93,7 +93,7 @@ func main() {
 					NewOpcaoDesenharElipse(),
 					NewOpcaoDesenharBezier2(),
 					NewOpcaoDesenharBezier3(),
-					NewOpcaoVazia("Desenhar polilinha"),
+					NewOpcaoDesenharPolilinha(),
 					NewOpcaoVazia("Preencher por recursão"),
 					NewOpcaoVazia("Preencher por varredura"),
 					NewOpcaoVazia("Recortar linha"),
