@@ -91,7 +91,7 @@ func main() {
 					NewOpcaoDesenharLinha(),
 					NewOpcaoDesenharCirculo(),
 					NewOpcaoDesenharElipse(),
-					NewOpcaoVazia("Desenhar curva de Bezier (grau 2)"),
+					NewOpcaoDesenharBezier2(),
 					NewOpcaoVazia("Desenhar curva de Bezier (grau 3)"),
 					NewOpcaoVazia("Desenhar polilinha"),
 					NewOpcaoVazia("Preencher por recursão"),
