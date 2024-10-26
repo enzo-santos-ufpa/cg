@@ -36,6 +36,15 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 
 type EntradaModulo interface {
 	Evaluated() (map[ufpa_cg.Ponto]color.Color, bool)
+
+	// Selected informa ao usuário quais pontos ele já selecionou na grade de pontos.
+	//
+	// Quando a grade de pontos é criada, este método será chamado para cada ponto nela. Caso este método retorne
+	// verdadeiro para um ponto, ele será pintado de vermelho, indicando que o usuário o selecionou por meio desta
+	// entrada.
+	//
+	// Note que nem todos os tipos de entrada precisam retornar verdadeiro neste método: uma entrada de valor inteiro
+	// não requer interação com a grade de pontos, portanto ele pode retornar falso incondicionalmente.
 	Selected(ponto ufpa_cg.Ponto) bool
 
 	// DescribePrompt informa ao usuário qual tipo de entrada ele seleciona no passo atual.
