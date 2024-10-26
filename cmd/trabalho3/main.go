@@ -72,7 +72,13 @@ type EntradaModulo interface {
 	DescribeAction() (string, bool)
 
 	DescribeValue() string
+
+	// Reset torna o estado desta entrada para o seu valor inicial.
+	//
+	// Este método é geralmente chamado quando o usuário termina de executar um módulo e quer refazê-lo. Neste caso,
+	// todas as entradas devem ser limpas para que ele as insira novamente.
 	Reset()
+
 	OnDisplay() (string, bool)
 	OnUpdate()
 	OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool)
