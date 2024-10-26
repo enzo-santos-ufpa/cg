@@ -37,6 +37,14 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 type EntradaModulo interface {
 	Evaluated() (map[ufpa_cg.Ponto]color.Color, bool)
 	Selected(ponto ufpa_cg.Ponto) bool
+
+	// DescribePrompt informa ao usuário qual tipo de entrada ele seleciona no passo atual.
+	//
+	// Por exemplo, uma entrada de polígono pode retornar algo como "Selecione o conjunto de pontos:".
+	//
+	// Note que este método pode ser implementado para se basear no menu atual do usuário. Por exemplo, uma entrada
+	// de ponto pode retornar "Selecione o ponto 1:" para o primeiro ponto no menu de desenhar uma reta, mas também
+	// retornar "Selecione o centro:" no menu de desenhar um círculo.
 	DescribePrompt() string
 
 	// DescribeAction informa ao usuário quais ações ele deve executar para ir para o próximo passo.
