@@ -1,8 +1,10 @@
 package main
 
 import (
+	"cmp"
 	"github.com/hajimehoshi/ebiten/v2"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
+	"math"
 	"slices"
 	"ufpa_cg"
 )
@@ -45,6 +47,87 @@ func (a *algoritmoPreenchimentoRecursao) Evaluate(vertices []ufpa_cg.Ponto, pont
 	}
 	miolo := make([]ufpa_cg.Ponto, 0)
 	a.preenche(&miolo, borda, ponto)
+	return miolo
+}
+
+type algoritmoPreenchimentoVarredura struct{}
+
+func NewAlgoritmoPreenchimentoVarredura() AlgoritmoPreenchimento {
+	return &algoritmoPreenchimentoVarredura{}
+}
+
+func (a *algoritmoPreenchimentoVarredura) Evaluate(vertices []ufpa_cg.Ponto, _ ufpa_cg.Ponto) []ufpa_cg.Ponto {
+	type PontoCritico struct {
+		Indice   int
+		Direcao  int
+		X        float64
+		MInverso float64
+	}
+
+	miolo := make([]ufpa_cg.Ponto, 0)
+
+	yMin := 999
+	yMax := -999
+	pontosCriticos := make([]PontoCritico, 0)
+	for i, vertice := range vertices {
+		if vertice.Y < yMin {
+			yMin = vertice.Y
+		}
+		if yMax < vertice.Y {
+			yMax = vertice.Y
+		}
+		vertice2 := vertices[(i+1)%len(vertices)]
+		if vertice.Y < vertice2.Y {
+			pontosCriticos = append(pontosCriticos, PontoCritico{
+				Indice:   i,
+				Direcao:  1,
+				X:        float64(vertice.X),
+				MInverso: float64(vertice2.X-vertice.X) / float64(vertice2.Y-vertice.Y),
+			})
+		}
+		vertice0 := vertices[(i-1+len(vertices))%len(vertices)]
+		if vertice.Y < vertice0.Y {
+			pontosCriticos = append(pontosCriticos, PontoCritico{
+				Indice:   i,
+				Direcao:  -1,
+				X:        float64(vertice.X),
+				MInverso: float64(vertice0.X-vertice.X) / float64(vertice0.Y-vertice.Y),
+			})
+		}
+	}
+
+	pontosCriticosAtuais := make([]*PontoCritico, 0)
+	for y := yMin; y <= yMax; y++ {
+		for _, pontoCritico := range pontosCriticosAtuais {
+			pontoCritico.X += pontoCritico.MInverso
+		}
+		for _, pontoCritico := range pontosCriticos {
+			if vertices[pontoCritico.Indice].Y == y {
+				pontosCriticosAtuais = append(pontosCriticosAtuais, &pontoCritico)
+			}
+		}
+
+		novosPontosCriticosAtuais := make([]*PontoCritico, 0)
+		for _, pontoCritico := range pontosCriticosAtuais {
+			pontoMax := vertices[(pontoCritico.Indice+pontoCritico.Direcao+len(vertices))%len(vertices)]
+			if pontoMax.Y == y {
+				continue
+			}
+			novosPontosCriticosAtuais = append(novosPontosCriticosAtuais, pontoCritico)
+		}
+		pontosCriticosAtuais = novosPontosCriticosAtuais[:]
+		slices.SortStableFunc(pontosCriticosAtuais, func(p0, p1 *PontoCritico) int {
+			return cmp.Compare(p0.X, p1.X)
+		})
+		for i := 0; i < len(pontosCriticosAtuais); i += 2 {
+			p0 := pontosCriticosAtuais[i]
+			p1 := pontosCriticosAtuais[i+1]
+
+			for x := int(math.Round(p0.X)); x <= int(math.Round(p1.X)); x++ {
+				miolo = append(miolo, ufpa_cg.Ponto{X: x, Y: y})
+			}
+		}
+	}
 	return miolo
 }
 
