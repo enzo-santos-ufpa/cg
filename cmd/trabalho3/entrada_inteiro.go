@@ -51,8 +51,8 @@ func (e *entradaInteiro) DescribeValue() string {
 	return fmt.Sprintf("%d", e.valor)
 }
 
-func (e *entradaInteiro) Evaluated() bool {
-	return e.ok
+func (e *entradaInteiro) Evaluated() (map[ufpa_cg.Ponto]color.Color, bool) {
+	return nil, e.ok
 }
 
 func (e *entradaInteiro) Reset() {

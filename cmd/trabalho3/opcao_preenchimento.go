@@ -135,7 +135,6 @@ type configuracoesPreenchimento struct {
 	Algoritmo AlgoritmoPreenchimento
 
 	// TODO Valida se ponto selecionado está dentro da polilinha
-	// TODO Desenha borda após selecionar polilinha
 	pontos *entradaPontos
 	centro *entradaPonto
 }

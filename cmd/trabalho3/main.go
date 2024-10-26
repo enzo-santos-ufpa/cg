@@ -35,7 +35,7 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 }
 
 type EntradaModulo interface {
-	Evaluated() bool
+	Evaluated() (map[ufpa_cg.Ponto]color.Color, bool)
 	Selected(ponto ufpa_cg.Ponto) bool
 	DescribeLabel() string
 	DescribeValue() string

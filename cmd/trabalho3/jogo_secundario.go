@@ -27,7 +27,7 @@ func (j *JogoSecundario) Update() error {
 	// Seleciona o ponto atual da tela
 	allEvaluated := true
 	for _, inp := range settings.Inputs() {
-		if inp.Evaluated() {
+		if _, evaluated := inp.Evaluated(); evaluated {
 			continue
 		}
 		inp.OnUpdate()
@@ -84,11 +84,16 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		return
 	}
 
+	stamps := make(map[ufpa_cg.Ponto]color.Color)
 	var currentInput EntradaModulo
 	for _, inp := range settings.Inputs() {
-		if !inp.Evaluated() {
+		stamp, evaluated := inp.Evaluated()
+		if !evaluated {
 			currentInput = inp
 			break
+		}
+		for ponto, cor := range stamp {
+			stamps[ponto] = cor
 		}
 	}
 
@@ -117,7 +122,9 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 			}
 
 			pixel := ebiten.NewImage(pointSize, pointSize)
-			if ok {
+			if stampColor, isStamp := stamps[ponto]; isStamp {
+				pixel.Fill(stampColor)
+			} else if ok {
 				pixel.Fill(customColor)
 			} else if selected { // Se este ponto for algum selecionado
 				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
@@ -147,7 +154,7 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		text := fmt.Sprintf("Selecione o %s:", inp.DescribeLabel())
 		ebitentext.Draw(screen, text, textFace, op)
 		w, h := ebitentext.Measure(text, textFace, 0)
-		if !inp.Evaluated() {
+		if _, evaluated := inp.Evaluated(); !evaluated {
 			if text, ok := inp.OnDisplay(); ok {
 				ebitenutil.DebugPrintAt(screen, text, dx+int(w)+10, heightOffset)
 			}

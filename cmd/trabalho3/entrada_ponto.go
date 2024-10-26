@@ -63,8 +63,8 @@ func (e *entradaPonto) DescribeValue() string {
 	return fmt.Sprintf("(%d, %d)", e.ponto.X, e.ponto.Y)
 }
 
-func (e *entradaPonto) Evaluated() bool {
-	return e.ok
+func (e *entradaPonto) Evaluated() (map[ufpa_cg.Ponto]color.Color, bool) {
+	return nil, e.ok
 }
 
 func (e *entradaPonto) Reset() {
