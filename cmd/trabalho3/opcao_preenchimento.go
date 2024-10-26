@@ -134,18 +134,16 @@ func (a *algoritmoPreenchimentoVarredura) Evaluate(vertices []ufpa_cg.Ponto, _ u
 type configuracoesPreenchimento struct {
 	Algoritmo AlgoritmoPreenchimento
 
-	// TODO Valida se ponto selecionado está dentro da polilinha
-	pontos *entradaPontos
-	centro *entradaPonto
+	entrada *entradaPontoPolilinha
 }
 
 func (c *configuracoesPreenchimento) Inputs() []EntradaModulo {
-	return []EntradaModulo{c.pontos, c.centro}
+	return []EntradaModulo{c.entrada}
 }
 
 func (c *configuracoesPreenchimento) Evaluate() []ufpa_cg.Ponto {
-	inps := c.pontos.entradas[:len(c.pontos.entradas)-1]
-	ponto := c.centro.ponto
+	inps := c.entrada.pontos.entradas[:len(c.entrada.pontos.entradas)-1]
+	ponto := c.entrada.ponto.ponto
 
 	vertices := make([]ufpa_cg.Ponto, len(inps))
 	for i := 0; i < len(inps); i++ {
@@ -178,8 +176,10 @@ func (o *opcaoPreenchimento) Create() ModuloJogo {
 	return &moduloPreenchimento{
 		settings: &configuracoesPreenchimento{
 			Algoritmo: o.Algoritmo,
-			pontos:    &entradaPontos{Minimo: 3, entradas: []*entradaPonto{new(entradaPonto)}},
-			centro:    &entradaPonto{Label: "ponto interno"},
+			entrada: &entradaPontoPolilinha{
+				pontos: &entradaPontos{Minimo: 3, entradas: []*entradaPonto{new(entradaPonto)}},
+				ponto:  &entradaPonto{Label: "ponto interno"},
+			},
 		},
 	}
 }
