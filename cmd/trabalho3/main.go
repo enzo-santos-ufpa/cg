@@ -94,7 +94,7 @@ func main() {
 					NewOpcaoDesenharBezier2(),
 					NewOpcaoDesenharBezier3(),
 					NewOpcaoDesenharPolilinha(),
-					NewOpcaoVazia("Preencher por recursão"),
+					NewOpcaoPreenchimento("Preencher por recursão", NewAlgoritmoPreenchimentoRecursao()),
 					NewOpcaoVazia("Preencher por varredura"),
 					NewOpcaoVazia("Recortar linha"),
 					NewOpcaoVazia("Recortar polígono"),
