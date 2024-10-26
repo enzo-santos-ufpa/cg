@@ -38,7 +38,22 @@ type EntradaModulo interface {
 	Evaluated() (map[ufpa_cg.Ponto]color.Color, bool)
 	Selected(ponto ufpa_cg.Ponto) bool
 	DescribePrompt() string
-	DescribeHint() (string, bool)
+
+	// DescribeAction informa ao usuário quais ações ele deve executar para ir para o próximo passo.
+	//
+	// Por exemplo, uma entrade de polígono pode precisar que o usuário clique na grade de pontos para selecionar os
+	// vértices e pressione Enter para prosseguir para a próxima entrada. Neste caso, este método pode retornar algo
+	// como ("Pressione ENTER para prosseguir", true).
+	//
+	// Este método também pode descrever ações adicionais que o usuário pode executar para modificar a entrada atual.
+	// Por exemplo, uma entrada de valor inteiro pode precisar que o usuário pressione a tecla de seta para cima no
+	// teclado para incrementar o valor inteiro atual. Neste caso, este método pode retornar algo como ("Pressione a
+	// seta para cima para prosseguir", true).
+	//
+	// Caso o segundo valor de retorno seja falso, supõe-se que a ação atual é simplesmente clicar em algum ponto na
+	// grade de pontos principais. Neste caso, nenhum texto de ação será exibido.
+	DescribeAction() (string, bool)
+
 	DescribeValue() string
 	Reset()
 	OnDisplay() (string, bool)

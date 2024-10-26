@@ -89,7 +89,7 @@ func (e *entradaPontos) DescribePrompt() string {
 	return fmt.Sprintf("Selecione o conjunto de pontos: %s", buffer.String())
 }
 
-func (e *entradaPontos) DescribeHint() (string, bool) {
+func (e *entradaPontos) DescribeAction() (string, bool) {
 	return "Pressione ENTER para prosseguir", true
 }
 

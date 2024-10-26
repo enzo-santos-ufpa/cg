@@ -47,7 +47,7 @@ func (e *entradaInteiro) DescribePrompt() string {
 	return fmt.Sprintf("Selecione o %s:", e.Label)
 }
 
-func (e *entradaInteiro) DescribeHint() (string, bool) {
+func (e *entradaInteiro) DescribeAction() (string, bool) {
 	return "Pressione ↑ ou ↓ para selecionar, ENTER para prosseguir", true
 }
 

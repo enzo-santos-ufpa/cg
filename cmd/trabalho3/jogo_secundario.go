@@ -168,7 +168,7 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		heightOffset += int(h) + 5
 	}
 	if currentInput != nil {
-		if hintLabel, ok := currentInput.DescribeHint(); ok {
+		if hintLabel, ok := currentInput.DescribeAction(); ok {
 			op := &ebitentext.DrawOptions{}
 			op.ColorScale.ScaleWithColor(color.White)
 			op.GeoM.Translate(20, float64(heightOffset))

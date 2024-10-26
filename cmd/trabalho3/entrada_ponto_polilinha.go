@@ -87,11 +87,11 @@ func (e *entradaPontoPolilinha) DescribePrompt() string {
 	return e.ponto.DescribePrompt()
 }
 
-func (e *entradaPontoPolilinha) DescribeHint() (string, bool) {
+func (e *entradaPontoPolilinha) DescribeAction() (string, bool) {
 	if _, evaluated := e.pontos.Evaluated(); !evaluated {
-		return e.pontos.DescribeHint()
+		return e.pontos.DescribeAction()
 	}
-	return e.ponto.DescribeHint()
+	return e.ponto.DescribeAction()
 }
 
 func (e *entradaPontoPolilinha) DescribeValue() string {
