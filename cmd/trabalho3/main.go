@@ -38,6 +38,7 @@ type EntradaModulo interface {
 	Evaluated() (map[ufpa_cg.Ponto]color.Color, bool)
 	Selected(ponto ufpa_cg.Ponto) bool
 	DescribePrompt() string
+	DescribeHint() (string, bool)
 	DescribeValue() string
 	Reset()
 	OnDisplay() (string, bool)

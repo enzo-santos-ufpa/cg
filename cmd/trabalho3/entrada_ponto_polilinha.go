@@ -87,6 +87,13 @@ func (e *entradaPontoPolilinha) DescribePrompt() string {
 	return e.ponto.DescribePrompt()
 }
 
+func (e *entradaPontoPolilinha) DescribeHint() (string, bool) {
+	if _, evaluated := e.pontos.Evaluated(); !evaluated {
+		return e.pontos.DescribeHint()
+	}
+	return e.ponto.DescribeHint()
+}
+
 func (e *entradaPontoPolilinha) DescribeValue() string {
 	for _, inp := range []EntradaModulo{e.pontos, e.ponto} {
 		if _, evaluated := inp.Evaluated(); evaluated {

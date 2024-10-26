@@ -59,6 +59,10 @@ func (e *entradaPonto) DescribePrompt() string {
 	return fmt.Sprintf("Selecione o %s:", e.Label)
 }
 
+func (e *entradaPonto) DescribeHint() (string, bool) {
+	return "", false
+}
+
 func (e *entradaPonto) DescribeValue() string {
 	return fmt.Sprintf("(%d, %d)", e.ponto.X, e.ponto.Y)
 }

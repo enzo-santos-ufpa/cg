@@ -150,13 +150,14 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		op := &ebitentext.DrawOptions{}
 		op.ColorScale.ScaleWithColor(color.White)
 		op.GeoM.Translate(dx, float64(heightOffset))
-		text := inp.DescribePrompt()
-		ebitentext.Draw(screen, text, textFace, op)
-		w, h := ebitentext.Measure(text, textFace, 0)
+		promptLabel := inp.DescribePrompt()
+		ebitentext.Draw(screen, promptLabel, textFace, op)
+		w, h := ebitentext.Measure(promptLabel, textFace, 0)
 		if _, evaluated := inp.Evaluated(); !evaluated {
 			if text, ok := inp.OnDisplay(); ok {
 				ebitenutil.DebugPrintAt(screen, text, dx+int(w)+10, heightOffset)
 			}
+			heightOffset += int(h) + 5
 			break
 		} else {
 			op := &ebitentext.DrawOptions{}
@@ -166,7 +167,16 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		}
 		heightOffset += int(h) + 5
 	}
-
+	if currentInput != nil {
+		if hintLabel, ok := currentInput.DescribeHint(); ok {
+			op := &ebitentext.DrawOptions{}
+			op.ColorScale.ScaleWithColor(color.White)
+			op.GeoM.Translate(20, float64(heightOffset))
+			ebitentext.Draw(screen, hintLabel, textFace, op)
+			_, h := ebitentext.Measure(hintLabel, textFace, 0)
+			heightOffset += int(h) + 5
+		}
+	}
 	if len(settings.Inputs()) > 0 && currentInput == nil {
 		op := &ebitentext.DrawOptions{}
 		op.ColorScale.ScaleWithColor(color.White)
