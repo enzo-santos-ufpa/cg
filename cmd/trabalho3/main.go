@@ -71,6 +71,8 @@ type EntradaModulo interface {
 	// grade de pontos principais. Neste caso, nenhum texto de ação será exibido.
 	DescribeAction() (string, bool)
 
+	DescribeState() (string, bool)
+
 	DescribeValue() string
 
 	// Reset torna o estado desta entrada para o seu valor inicial.
@@ -79,7 +81,6 @@ type EntradaModulo interface {
 	// todas as entradas devem ser limpas para que ele as insira novamente.
 	Reset()
 
-	OnDisplay() (string, bool)
 	OnUpdate()
 	OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool)
 }

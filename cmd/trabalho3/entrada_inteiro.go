@@ -39,7 +39,7 @@ func (e *entradaInteiro) OnDraw(_ ufpa_cg.Ponto, _, _ int, _ int) (color.Color, 
 	return nil, false
 }
 
-func (e *entradaInteiro) OnDisplay() (string, bool) {
+func (e *entradaInteiro) DescribeState() (string, bool) {
 	return fmt.Sprintf("%d", e.estado.valorAtual), true
 }
 

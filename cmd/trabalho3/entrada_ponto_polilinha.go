@@ -67,10 +67,10 @@ func (e *entradaPontoPolilinha) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) 
 	return e.pontos.OnDraw(ponto, x, y, size)
 }
 
-func (e *entradaPontoPolilinha) OnDisplay() (string, bool) {
+func (e *entradaPontoPolilinha) DescribeState() (string, bool) {
 	for _, inp := range []EntradaModulo{e.pontos, e.ponto} {
 		if _, evaluated := inp.Evaluated(); !evaluated {
-			if label, ok := inp.OnDisplay(); ok {
+			if label, ok := inp.DescribeState(); ok {
 				return label, true
 			}
 			break

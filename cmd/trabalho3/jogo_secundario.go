@@ -154,7 +154,7 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		ebitentext.Draw(screen, promptLabel, textFace, op)
 		w, h := ebitentext.Measure(promptLabel, textFace, 0)
 		if _, evaluated := inp.Evaluated(); !evaluated {
-			if text, ok := inp.OnDisplay(); ok {
+			if text, ok := inp.DescribeState(); ok {
 				ebitenutil.DebugPrintAt(screen, text, dx+int(w)+10, heightOffset)
 			}
 			heightOffset += int(h) + 5

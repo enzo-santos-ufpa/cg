@@ -47,7 +47,7 @@ func (e *entradaPonto) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Co
 	return nil, false
 }
 
-func (e *entradaPonto) OnDisplay() (string, bool) {
+func (e *entradaPonto) DescribeState() (string, bool) {
 	if ponto := e.estado.pontoAtual; ponto != nil {
 		return fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y), true
 	} else {

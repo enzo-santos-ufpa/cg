@@ -61,7 +61,7 @@ func (e *entradaPontos) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.C
 	return nil, false
 }
 
-func (e *entradaPontos) OnDisplay() (string, bool) {
+func (e *entradaPontos) DescribeState() (string, bool) {
 	for _, inp := range e.entradas {
 		if _, evaluated := inp.Evaluated(); !evaluated {
 			if ponto := inp.estado.pontoAtual; ponto != nil {
