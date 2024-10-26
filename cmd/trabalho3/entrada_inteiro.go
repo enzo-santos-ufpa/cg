@@ -43,8 +43,8 @@ func (e *entradaInteiro) OnDisplay() (string, bool) {
 	return fmt.Sprintf("%d", e.estado.valorAtual), true
 }
 
-func (e *entradaInteiro) DescribeLabel() string {
-	return e.Label
+func (e *entradaInteiro) DescribePrompt() string {
+	return fmt.Sprintf("Selecione o %s:", e.Label)
 }
 
 func (e *entradaInteiro) DescribeValue() string {

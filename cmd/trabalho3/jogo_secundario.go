@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -151,7 +150,7 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		op := &ebitentext.DrawOptions{}
 		op.ColorScale.ScaleWithColor(color.White)
 		op.GeoM.Translate(dx, float64(heightOffset))
-		text := fmt.Sprintf("Selecione o %s:", inp.DescribeLabel())
+		text := inp.DescribePrompt()
 		ebitentext.Draw(screen, text, textFace, op)
 		w, h := ebitentext.Measure(text, textFace, 0)
 		if _, evaluated := inp.Evaluated(); !evaluated {

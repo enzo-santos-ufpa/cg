@@ -55,8 +55,8 @@ func (e *entradaPonto) OnDisplay() (string, bool) {
 	}
 }
 
-func (e *entradaPonto) DescribeLabel() string {
-	return e.Label
+func (e *entradaPonto) DescribePrompt() string {
+	return fmt.Sprintf("Selecione o %s:", e.Label)
 }
 
 func (e *entradaPonto) DescribeValue() string {

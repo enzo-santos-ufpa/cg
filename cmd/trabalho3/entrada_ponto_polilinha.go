@@ -80,11 +80,11 @@ func (e *entradaPontoPolilinha) OnDisplay() (string, bool) {
 	return "", false
 }
 
-func (e *entradaPontoPolilinha) DescribeLabel() string {
+func (e *entradaPontoPolilinha) DescribePrompt() string {
 	if _, evaluated := e.pontos.Evaluated(); !evaluated {
-		return "conjunto de pontos"
+		return e.pontos.DescribePrompt()
 	}
-	return "ponto dentro do polígono"
+	return e.ponto.DescribePrompt()
 }
 
 func (e *entradaPontoPolilinha) DescribeValue() string {

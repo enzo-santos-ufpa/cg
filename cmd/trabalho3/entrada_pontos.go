@@ -74,8 +74,19 @@ func (e *entradaPontos) OnDisplay() (string, bool) {
 	return "", false
 }
 
-func (e *entradaPontos) DescribeLabel() string {
-	return "conjunto de pontos"
+func (e *entradaPontos) DescribePrompt() string {
+	buffer := strings.Builder{}
+	for i, inp := range e.entradas {
+		if _, evaluated := inp.Evaluated(); !evaluated {
+			break
+		}
+		ponto := inp.ponto
+		buffer.WriteString(fmt.Sprintf("(%d, %d)", ponto.X, ponto.Y))
+		if i < len(e.entradas)-1 {
+			buffer.WriteString(", ")
+		}
+	}
+	return fmt.Sprintf("Selecione o conjunto de pontos: %s", buffer.String())
 }
 
 func (e *entradaPontos) DescribeValue() string {
