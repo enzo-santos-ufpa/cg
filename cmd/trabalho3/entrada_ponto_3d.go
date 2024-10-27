@@ -73,8 +73,13 @@ func (e *entradaPonto3D) DescribePrompt() string {
 	return ""
 }
 
-func (e *entradaPonto3D) DescribeAction() (string, bool) {
-	return "", false
+func (e *entradaPonto3D) DescribeActions() []AcaoEntrada {
+	for _, inp := range e.entradas() {
+		if _, evaluated := inp.Evaluated(); !evaluated {
+			return inp.DescribeActions()
+		}
+	}
+	return []AcaoEntrada{{Titulo: "ENTER", Descricao: "prosseguir"}}
 }
 
 func (e *entradaPonto3D) DescribeValue() string {

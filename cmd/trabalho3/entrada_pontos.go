@@ -92,8 +92,13 @@ func (e *entradaPontos) DescribePrompt() string {
 	return fmt.Sprintf("Selecione o conjunto de pontos: %s", buffer.String())
 }
 
-func (e *entradaPontos) DescribeAction() (string, bool) {
-	return "Pressione ENTER para prosseguir", true
+func (e *entradaPontos) DescribeActions() []AcaoEntrada {
+	if len(e.entradas)-1 < e.Minimo {
+		return nil
+	}
+	return []AcaoEntrada{
+		{Titulo: "ENTER", Descricao: "finalizar"},
+	}
 }
 
 func (e *entradaPontos) DescribeValue() string {

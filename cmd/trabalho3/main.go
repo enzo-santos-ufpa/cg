@@ -34,6 +34,11 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 	return false
 }
 
+type AcaoEntrada struct {
+	Titulo    string
+	Descricao string
+}
+
 type EntradaModulo interface {
 	Evaluated() (map[ufpa_cg.Ponto]color.Color, bool)
 
@@ -56,7 +61,7 @@ type EntradaModulo interface {
 	// retornar "Selecione o centro:" no menu de desenhar um círculo.
 	DescribePrompt() string
 
-	// DescribeAction informa ao usuário quais ações ele deve executar para ir para o próximo passo.
+	// DescribeActions informa ao usuário quais ações ele deve executar para ir para o próximo passo.
 	//
 	// Por exemplo, uma entrade de polígono pode precisar que o usuário clique na grade de pontos para selecionar os
 	// vértices e pressione Enter para prosseguir para a próxima entrada. Neste caso, este método pode retornar algo
@@ -69,7 +74,7 @@ type EntradaModulo interface {
 	//
 	// Caso o segundo valor de retorno seja falso, supõe-se que a ação atual é simplesmente clicar em algum ponto na
 	// grade de pontos principais. Neste caso, nenhum texto de ação será exibido.
-	DescribeAction() (string, bool)
+	DescribeActions() []AcaoEntrada
 
 	// DescribeState informa ao usuário o estado atual desta entrada.
 	//

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"golang.org/x/text/language"
 	"image/color"
 	"slices"
+	"strings"
 	"ufpa_cg"
 )
 
@@ -168,12 +170,21 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 		heightOffset += int(h) + 5
 	}
 	if currentInput != nil {
-		if hintLabel, ok := currentInput.DescribeAction(); ok {
+		if actions := currentInput.DescribeActions(); len(actions) > 0 {
+			buffer := strings.Builder{}
+			buffer.WriteString("Pressione ")
+			for i, action := range actions {
+				buffer.WriteString(fmt.Sprintf("%s para %s", action.Titulo, action.Descricao))
+				if i < len(actions)-1 {
+					buffer.WriteString(", ")
+				}
+			}
+			label := buffer.String()
 			op := &ebitentext.DrawOptions{}
 			op.ColorScale.ScaleWithColor(color.White)
 			op.GeoM.Translate(20, float64(heightOffset))
-			ebitentext.Draw(screen, hintLabel, textFace, op)
-			_, h := ebitentext.Measure(hintLabel, textFace, 0)
+			ebitentext.Draw(screen, label, textFace, op)
+			_, h := ebitentext.Measure(label, textFace, 0)
 			heightOffset += int(h) + 5
 		}
 	}

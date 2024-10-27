@@ -71,8 +71,8 @@ func (e *entradaJanela) DescribePrompt() string {
 	)
 }
 
-func (e *entradaJanela) DescribeAction() (string, bool) {
-	return "", false
+func (e *entradaJanela) DescribeActions() []AcaoEntrada {
+	return nil
 }
 
 func (e *entradaJanela) DescribeValue() string {

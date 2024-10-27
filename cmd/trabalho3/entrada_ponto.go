@@ -59,8 +59,8 @@ func (e *entradaPonto) DescribePrompt() string {
 	return fmt.Sprintf("Selecione o %s:", e.Label)
 }
 
-func (e *entradaPonto) DescribeAction() (string, bool) {
-	return "", false
+func (e *entradaPonto) DescribeActions() []AcaoEntrada {
+	return nil
 }
 
 func (e *entradaPonto) DescribeValue() string {

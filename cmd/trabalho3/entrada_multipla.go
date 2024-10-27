@@ -90,8 +90,18 @@ func (e *entradaMultipla[E]) DescribePrompt() string {
 	return fmt.Sprintf("%s: %s", e.Prompt, buffer.String())
 }
 
-func (e *entradaMultipla[E]) DescribeAction() (string, bool) {
-	return "Pressione ENTER para prosseguir, ENTERpad para finalizar", true
+func (e *entradaMultipla[E]) DescribeActions() []AcaoEntrada {
+	actions := make([]AcaoEntrada, 0)
+	for _, inp := range e.entradas {
+		if _, evaluated := inp.Evaluated(); !evaluated {
+			actions = append(actions, inp.DescribeActions()...)
+			break
+		}
+	}
+	if len(e.entradas)-1 >= e.Minimo {
+		actions = append(actions, AcaoEntrada{Titulo: "ENTERpad", Descricao: "concluir"})
+	}
+	return actions
 }
 
 func (e *entradaMultipla[E]) DescribeValue() string {
