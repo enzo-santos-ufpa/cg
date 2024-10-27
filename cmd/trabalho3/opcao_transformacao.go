@@ -18,7 +18,13 @@ type algoritmoRotacao struct {
 
 func NewAlgoritmoTransformacaoRotacao() AlgoritmoTransformacao {
 	return &algoritmoRotacao{
-		entradaAngulo: &entradaInteiro{Label: "ângulo (º)"},
+		entradaAngulo: &entradaInteiro{
+			Label:        "ângulo (º)",
+			PossuiMinimo: true,
+			Minimo:       -360,
+			PossuiMaximo: true,
+			Maximo:       360,
+		},
 	}
 }
 
@@ -38,8 +44,12 @@ type algoritmoTranslacao struct {
 
 func NewAlgoritmoTransformacaoTranslacao() AlgoritmoTransformacao {
 	return &algoritmoTranslacao{
-		entradaDx: &entradaInteiro{Label: "deslocamento X"},
-		entradaDy: &entradaInteiro{Label: "deslocamento Y"},
+		entradaDx: &entradaInteiro{
+			Label: "deslocamento X",
+		},
+		entradaDy: &entradaInteiro{
+			Label: "deslocamento Y",
+		},
 	}
 }
 
@@ -59,8 +69,12 @@ type algoritmoEscala struct {
 
 func NewAlgoritmoTransformacaoEscala() AlgoritmoTransformacao {
 	return &algoritmoEscala{
-		entradaEx: &entradaInteiro{Label: "fator X"},
-		entradaEy: &entradaInteiro{Label: "fator Y"},
+		entradaEx: &entradaInteiro{
+			Label: "fator X",
+		},
+		entradaEy: &entradaInteiro{
+			Label: "fator Y",
+		},
 	}
 }
 

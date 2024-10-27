@@ -67,7 +67,11 @@ func (o *opcaoDesenharCirculo) Create() ModuloJogo {
 	return &moduloDesenhaCirculo{
 		settings: &configuracoesDesenharCirculo{
 			centro: &entradaPonto{Label: "centro"},
-			raio:   &entradaInteiro{Label: "raio"},
+			raio: &entradaInteiro{
+				Label:        "raio",
+				PossuiMinimo: true,
+				Minimo:       1,
+			},
 		},
 	}
 }

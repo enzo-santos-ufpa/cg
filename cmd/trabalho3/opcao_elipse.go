@@ -86,8 +86,16 @@ func (o *opcaoDesenharElipse) Create() ModuloJogo {
 	return &moduloDesenhaElipse{
 		settings: &configuracoesDesenharElipse{
 			centro: &entradaPonto{Label: "centro"},
-			eixoA:  &entradaInteiro{Label: "eixo A"},
-			eixoB:  &entradaInteiro{Label: "eixo B"},
+			eixoA: &entradaInteiro{
+				Label:        "eixo A",
+				PossuiMinimo: true,
+				Minimo:       1,
+			},
+			eixoB: &entradaInteiro{
+				Label:        "eixo B",
+				PossuiMinimo: true,
+				Minimo:       1,
+			},
 		},
 	}
 }

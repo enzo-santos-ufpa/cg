@@ -12,7 +12,11 @@ type estadoEntradaInteiro struct {
 }
 
 type entradaInteiro struct {
-	Label string
+	Label        string
+	Minimo       int
+	PossuiMinimo bool
+	Maximo       int
+	PossuiMaximo bool
 
 	estado estadoEntradaInteiro
 	valor  int
@@ -25,11 +29,15 @@ func (e *entradaInteiro) Selected(_ ufpa_cg.Ponto) bool {
 
 func (e *entradaInteiro) OnUpdate() {
 	switch {
-	case repeatingKeyPressed(ebiten.KeyDown) && e.estado.valorAtual > 0:
+	case repeatingKeyPressed(ebiten.KeyDown) &&
+		(!e.PossuiMinimo || e.estado.valorAtual >= e.Minimo):
 		e.estado.valorAtual--
-	case repeatingKeyPressed(ebiten.KeyUp):
+	case repeatingKeyPressed(ebiten.KeyUp) &&
+		(!e.PossuiMaximo || e.estado.valorAtual <= e.Maximo):
 		e.estado.valorAtual++
-	case repeatingKeyPressed(ebiten.KeyEnter) && e.estado.valorAtual > 0:
+	case repeatingKeyPressed(ebiten.KeyEnter) &&
+		(!e.PossuiMinimo || e.estado.valorAtual >= e.Minimo) &&
+		(!e.PossuiMaximo || e.estado.valorAtual <= e.Maximo):
 		e.valor = e.estado.valorAtual
 		e.ok = true
 	}
