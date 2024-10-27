@@ -76,6 +76,10 @@ type EntradaModulo interface {
 	// Por exemplo, uma entrada de valor inteiro pode retornar qual o valor inteiro que ele escolhe atualmente.
 	// Já uma entrada de ponto pode retornar as coordenadas do ponto que o cursor do mouse aponta na grade de pontos.
 	//
+	// Caso o segundo valor de retorno seja falso, significa que o usuário não está numa ação de escolha no momento.
+	// Por exemplo, uma entrada de ponto pode retornar falso caso o cursor do mouse não esteja sobre um ponto na grade
+	// de pontos. Neste caso, nenhum texto será exibido.
+	//
 	// Note que este método exibe o valor de entrada a escolher, enquanto o método DescribeValue exibe o valor de
 	// entrada já escolhido.
 	DescribeState() (string, bool)
