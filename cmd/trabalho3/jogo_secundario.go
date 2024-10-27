@@ -121,14 +121,14 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 			}
 
 			pixel := ebiten.NewImage(pointSize, pointSize)
-			if stampColor, isStamp := stamps[ponto]; isStamp {
+			if len(j.output) > 0 && slices.Contains(j.output, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
+				pixel.Fill(filledColor) // Marca este ponto como "NA RETA"
+			} else if selected { // Se este ponto for algum selecionado
+				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
+			} else if stampColor, isStamp := stamps[ponto]; isStamp {
 				pixel.Fill(stampColor)
 			} else if ok {
 				pixel.Fill(customColor)
-			} else if selected { // Se este ponto for algum selecionado
-				pixel.Fill(selectedColor) // Marca este ponto como "SELECIONADO"
-			} else if len(j.output) > 0 && slices.Contains(j.output, ponto) { // Se este ponto estiver na linha formada pelos pontos A e B
-				pixel.Fill(filledColor) // Marca este ponto como "NA RETA"
 			} else if i == 0 || j_ == 0 { // Se este ponto estiver em algum dos eixos X ou Y
 				pixel.Fill(defaultOriginColor) // Marca este ponto como "NÃO SELECIONADO, NA ORIGEM"
 			} else {
