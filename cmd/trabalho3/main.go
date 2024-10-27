@@ -74,13 +74,19 @@ type EntradaModulo interface {
 	// DescribeState informa ao usuário o estado atual desta entrada.
 	//
 	// Por exemplo, uma entrada de valor inteiro pode retornar qual o valor inteiro que ele escolhe atualmente.
-	// Já uma entrada de ponto pode retornar as coordenadas do ponto que o cursor do mouse está a apontar na grade de
-	// pontos.
+	// Já uma entrada de ponto pode retornar as coordenadas do ponto que o cursor do mouse aponta na grade de pontos.
 	//
 	// Note que este método exibe o valor de entrada a escolher, enquanto o método DescribeValue exibe o valor de
 	// entrada já escolhido.
 	DescribeState() (string, bool)
 
+	// DescribeValue informa ao usuário o estado final desta entrada.
+	//
+	// Por exemplo, uma entrada de valor inteiro pode retornar qual o valor inteiro que ele escolheu. Já uma entrada de
+	// ponto pode retornar as coordenadas do ponto que ele escolheu anteriormente.
+	//
+	// Note que este método exibe o valor de entrada já escolhido, enquanto o método DescribeState exibe o valor de
+	// entrada a escolher.
 	DescribeValue() string
 
 	// Reset torna o estado desta entrada para o seu valor inicial.
