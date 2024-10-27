@@ -154,7 +154,7 @@ func main() {
 					NewOpcaoDesenharPolilinha(),
 					NewOpcaoPreenchimento("Preencher por recursão", NewAlgoritmoPreenchimentoRecursao()),
 					NewOpcaoPreenchimento("Preencher por varredura", NewAlgoritmoPreenchimentoVarredura()),
-					NewOpcaoVazia("Recortar linha"),
+					NewOpcaoRecortarLinha(),
 					NewOpcaoVazia("Recortar polígono"),
 					NewOpcaoVazia("Transformar por rotação"),
 					NewOpcaoVazia("Transformar por translação"),
