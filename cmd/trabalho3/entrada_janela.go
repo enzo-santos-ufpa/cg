@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"ufpa_cg"
 )
@@ -68,7 +69,22 @@ func (e *entradaJanela) DescribePrompt() string {
 	if _, evaluated := e.entradaPontoSuperiorEsquerdo.Evaluated(); !evaluated {
 		return "Selecione o ponto superior esquerdo:"
 	}
-	return "Selecione o ponto inferior direito:"
+	pontoSuperiorEsquerdo := e.entradaPontoSuperiorEsquerdo.ponto
+	if _, evaluated := e.entradaPontoInferiorDireito.Evaluated(); !evaluated {
+		return fmt.Sprintf(
+			"Selecione o ponto inferior direito: (%d, %d), ",
+			pontoSuperiorEsquerdo.X,
+			pontoSuperiorEsquerdo.Y,
+		)
+	}
+	pontoInferiorDireito := e.entradaPontoInferiorDireito.ponto
+	return fmt.Sprintf(
+		"Selecione o ponto inferior direito: (%d, %d), (%d, %d)",
+		pontoSuperiorEsquerdo.X,
+		pontoSuperiorEsquerdo.Y,
+		pontoInferiorDireito.X,
+		pontoInferiorDireito.Y,
+	)
 }
 
 func (e *entradaJanela) DescribeAction() (string, bool) {
