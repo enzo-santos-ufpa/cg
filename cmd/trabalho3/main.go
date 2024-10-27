@@ -71,6 +71,14 @@ type EntradaModulo interface {
 	// grade de pontos principais. Neste caso, nenhum texto de ação será exibido.
 	DescribeAction() (string, bool)
 
+	// DescribeState informa ao usuário o estado atual desta entrada.
+	//
+	// Por exemplo, uma entrada de valor inteiro pode retornar qual o valor inteiro que ele escolhe atualmente.
+	// Já uma entrada de ponto pode retornar as coordenadas do ponto que o cursor do mouse está a apontar na grade de
+	// pontos.
+	//
+	// Note que este método exibe o valor de entrada a escolher, enquanto o método DescribeValue exibe o valor de
+	// entrada já escolhido.
 	DescribeState() (string, bool)
 
 	DescribeValue() string
