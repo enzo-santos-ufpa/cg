@@ -95,7 +95,7 @@ func (e *entradaPontoPolilinha) DescribeAction() (string, bool) {
 }
 
 func (e *entradaPontoPolilinha) DescribeValue() string {
-	for _, inp := range []EntradaModulo{e.pontos, e.ponto} {
+	for _, inp := range []EntradaModulo{e.ponto, e.pontos} {
 		if _, evaluated := inp.Evaluated(); evaluated {
 			return inp.DescribeValue()
 		}
