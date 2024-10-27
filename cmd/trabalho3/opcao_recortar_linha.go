@@ -17,11 +17,18 @@ func (c *configuracoesRecortarLinha) Inputs() []EntradaModulo {
 }
 
 func (c *configuracoesRecortarLinha) Evaluate() []ufpa_cg.Ponto {
+	janela := ufpa_cg.JanelaRecorte{
+		PontoSuperiorEsquerdo: c.janela.entradaPontoSuperiorEsquerdo.ponto,
+		PontoInferiorDireito:  c.janela.entradaPontoInferiorDireito.ponto,
+	}
 	pontoA := c.pontoA.ponto
 	pontoB := c.pontoB.ponto
-
 	pontos := make([]ufpa_cg.Ponto, 0)
-	algoritmo := ufpa_cg.NewAlgoritmoBresenham(pontoA, pontoB)
+	ponto1, ponto2, ok := janela.CalculaIntersecao(pontoA, pontoB)
+	if !ok {
+		return pontos
+	}
+	algoritmo := ufpa_cg.NewAlgoritmoBresenham(ponto1, ponto2)
 	for algoritmo.Move() {
 		pontos = append(pontos, algoritmo.PontoAtual())
 	}
