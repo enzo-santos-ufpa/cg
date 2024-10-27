@@ -2,6 +2,7 @@ package main
 
 import (
 	"cmp"
+	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	ebitentext "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"image/color"
@@ -11,13 +12,36 @@ import (
 )
 
 type AlgoritmoProjecao interface {
+	EvaluateInputs() []EntradaModulo
 	Transform(vertices []ufpa_cg.Ponto3D) []ufpa_cg.Ponto
 }
 
-type algoritmoProjecaoOrtogonal struct{}
+type algoritmoProjecaoOrtogonal struct {
+	entradaEixo *entradaItens[ufpa_cg.Eixo3D]
+}
 
 func NewAlgoritmoProjecaoOrtogonal() AlgoritmoProjecao {
-	return &algoritmoProjecaoOrtogonal{}
+	return &algoritmoProjecaoOrtogonal{
+		entradaEixo: &entradaItens[ufpa_cg.Eixo3D]{
+			Label: "plano de projeção",
+			Itens: []ufpa_cg.Eixo3D{ufpa_cg.EixoX, ufpa_cg.EixoY, ufpa_cg.EixoZ},
+			Labeler: func(value ufpa_cg.Eixo3D) string {
+				switch value {
+				case ufpa_cg.EixoX:
+					return "Plano YZ"
+				case ufpa_cg.EixoY:
+					return "Plano XZ"
+				case ufpa_cg.EixoZ:
+					return "Plano XY"
+				}
+				panic(fmt.Sprintf("invalid ufpa_cg.Eixo3D value: %v", value))
+			},
+		},
+	}
+}
+
+func (a *algoritmoProjecaoOrtogonal) EvaluateInputs() []EntradaModulo {
+	return []EntradaModulo{a.entradaEixo}
 }
 
 func (a *algoritmoProjecaoOrtogonal) Transform(vertices []ufpa_cg.Ponto3D) []ufpa_cg.Ponto {
@@ -45,6 +69,10 @@ func NewAlgoritmoProjecaoObliqua() AlgoritmoProjecao {
 	return &algoritmoProjecaoObliqua{}
 }
 
+func (a *algoritmoProjecaoObliqua) EvaluateInputs() []EntradaModulo {
+	return []EntradaModulo{}
+}
+
 func (a *algoritmoProjecaoObliqua) Transform(vertices []ufpa_cg.Ponto3D) []ufpa_cg.Ponto {
 	return []ufpa_cg.Ponto{}
 }
@@ -58,6 +86,10 @@ func NewAlgoritmoProjecaoPerspectiva() AlgoritmoProjecao {
 	return &algoritmoProjecaoPerspectiva{}
 }
 
+func (a *algoritmoProjecaoPerspectiva) EvaluateInputs() []EntradaModulo {
+	return []EntradaModulo{}
+}
+
 func (a *algoritmoProjecaoPerspectiva) Transform(vertices []ufpa_cg.Ponto3D) []ufpa_cg.Ponto {
 	return []ufpa_cg.Ponto{}
 }
@@ -69,7 +101,7 @@ type configuracoesProjetarPoligono3D struct {
 }
 
 func (c *configuracoesProjetarPoligono3D) Inputs() []EntradaModulo {
-	return []EntradaModulo{c.entrada}
+	return append([]EntradaModulo{c.entrada}, c.Algoritmo.EvaluateInputs()...)
 }
 
 func (c *configuracoesProjetarPoligono3D) Evaluate() []ufpa_cg.Ponto {
