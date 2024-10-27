@@ -155,7 +155,7 @@ func main() {
 					NewOpcaoPreenchimento("Preencher por recursão", NewAlgoritmoPreenchimentoRecursao()),
 					NewOpcaoPreenchimento("Preencher por varredura", NewAlgoritmoPreenchimentoVarredura()),
 					NewOpcaoRecortarLinha(),
-					NewOpcaoVazia("Recortar polígono"),
+					NewOpcaoRecortarPoligono(),
 					NewOpcaoVazia("Transformar por rotação"),
 					NewOpcaoVazia("Transformar por translação"),
 					NewOpcaoVazia("Transformar por escola"),
