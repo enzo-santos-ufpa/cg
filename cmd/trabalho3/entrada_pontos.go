@@ -75,6 +75,9 @@ func (e *entradaPontos) DescribeState() (string, bool) {
 }
 
 func (e *entradaPontos) DescribePrompt() string {
+	if _, evaluated := e.Evaluated(); evaluated {
+		return "Selecione o conjunto de pontos:"
+	}
 	buffer := strings.Builder{}
 	for i, inp := range e.entradas {
 		if _, evaluated := inp.Evaluated(); !evaluated {
