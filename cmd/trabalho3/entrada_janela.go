@@ -31,25 +31,9 @@ func (e *entradaJanela) OnUpdate() {
 
 func (e *entradaJanela) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool) {
 	if _, evaluated := e.entradaPontoSuperiorEsquerdo.Evaluated(); evaluated {
-		pontoSuperiorEsquerdo := e.entradaPontoSuperiorEsquerdo.ponto
-		if ponto.X < pontoSuperiorEsquerdo.X {
-			return color.Black, true
-		}
-		if ponto.Y > pontoSuperiorEsquerdo.Y {
-			return color.Black, true
-		}
-		if _, evaluated := e.entradaPontoInferiorDireito.Evaluated(); evaluated {
-			pontoInferiorDireito := e.entradaPontoInferiorDireito.ponto
-			if pontoInferiorDireito.X < ponto.X {
-				return color.Black, true
-			}
-			if pontoInferiorDireito.Y > ponto.Y {
-				return color.Black, true
-			}
-		} else {
+		if _, evaluated := e.entradaPontoInferiorDireito.Evaluated(); !evaluated {
 			return e.entradaPontoInferiorDireito.OnDraw(ponto, x, y, size)
 		}
-
 	} else {
 		return e.entradaPontoSuperiorEsquerdo.OnDraw(ponto, x, y, size)
 	}
@@ -102,23 +86,22 @@ func (e *entradaJanela) DescribeValue() string {
 
 func (e *entradaJanela) Evaluated() (map[ufpa_cg.Ponto]color.Color, bool) {
 	stamps := make(map[ufpa_cg.Ponto]color.Color)
-	for i, inp := range []*entradaPonto{e.entradaPontoSuperiorEsquerdo, e.entradaPontoInferiorDireito} {
+	for _, inp := range []*entradaPonto{e.entradaPontoSuperiorEsquerdo, e.entradaPontoInferiorDireito} {
 		if _, evaluated := inp.Evaluated(); !evaluated {
 			return stamps, false
 		} else {
 			stamps[inp.ponto] = color.RGBA{R: 0x63, G: 0x63, B: 0x63, A: 0xFF}
 		}
-
-		for j_ := -11; j_ <= 11; j_++ {
-			for i_ := -11; i_ <= 11; i_++ {
-				ponto := ufpa_cg.Ponto{X: i_, Y: -j_}
-				if i == 0 && (ponto.X < inp.ponto.X || ponto.Y > inp.ponto.Y) {
-					stamps[ponto] = color.Black
-				} else if i == 1 && (ponto.X > inp.ponto.X || ponto.Y < inp.ponto.Y) {
-					stamps[ponto] = color.Black
-				}
-			}
-		}
+	}
+	pontoSuperiorEsquerdo := e.entradaPontoSuperiorEsquerdo.ponto
+	pontoInferiorDireito := e.entradaPontoInferiorDireito.ponto
+	for x := pontoSuperiorEsquerdo.X - 1; x <= pontoInferiorDireito.X+1; x++ {
+		stamps[ufpa_cg.Ponto{X: x, Y: pontoSuperiorEsquerdo.Y + 1}] = color.Black
+		stamps[ufpa_cg.Ponto{X: x, Y: pontoInferiorDireito.Y - 1}] = color.Black
+	}
+	for y := pontoInferiorDireito.Y - 1; y <= pontoSuperiorEsquerdo.Y+1; y++ {
+		stamps[ufpa_cg.Ponto{X: pontoSuperiorEsquerdo.X - 1, Y: y}] = color.Black
+		stamps[ufpa_cg.Ponto{X: pontoInferiorDireito.X + 1, Y: y}] = color.Black
 	}
 	return stamps, true
 }
