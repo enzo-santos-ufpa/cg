@@ -185,6 +185,6 @@ func (j *JogoSecundario) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (j *JogoSecundario) Layout(_, _ int) (screenWidth, screenHeight int) {
-	return screenWidth, screenHeight
+func (j *JogoSecundario) Layout(w, h int) (screenWidth, screenHeight int) {
+	return w, h
 }

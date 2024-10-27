@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	screenWidth  = 640
+	screenWidth  = 720
 	screenHeight = 480
 )
 
@@ -159,9 +159,9 @@ func main() {
 					NewOpcaoTransformarPoligono("Transformar por rotação", NewAlgoritmoTransformacaoRotacao()),
 					NewOpcaoTransformarPoligono("Transformar por translação", NewAlgoritmoTransformacaoTranslacao()),
 					NewOpcaoTransformarPoligono("Transformar por escala", NewAlgoritmoTransformacaoEscala()),
-					NewOpcaoVazia("Realizar projeção ortogonal"),
-					NewOpcaoVazia("Realizar projeção oblíqua"),
-					NewOpcaoVazia("Realizar projeção perspectiva"),
+					NewOpcaoProjetarPoligono3D("Realizar projeção ortogonal", NewAlgoritmoProjecaoOrtogonal()),
+					NewOpcaoProjetarPoligono3D("Realizar projeção oblíqua", NewAlgoritmoProjecaoObliqua()),
+					NewOpcaoProjetarPoligono3D("Realizar projeção perspectiva", NewAlgoritmoProjecaoPerspectiva()),
 				},
 			}
 
