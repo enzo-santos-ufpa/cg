@@ -104,7 +104,7 @@ type EntradaModulo interface {
 	// todas as entradas devem ser limpas para que ele as insira novamente.
 	Reset()
 
-	OnUpdate()
+	OnUpdate() bool
 	OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool)
 }
 

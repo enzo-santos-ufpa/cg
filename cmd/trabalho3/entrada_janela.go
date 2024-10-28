@@ -20,13 +20,13 @@ func (e *entradaJanela) Selected(ponto ufpa_cg.Ponto) bool {
 	return false
 }
 
-func (e *entradaJanela) OnUpdate() {
+func (e *entradaJanela) OnUpdate() bool {
 	for _, inp := range []EntradaModulo{e.entradaPontoSuperiorEsquerdo, e.entradaPontoInferiorDireito} {
 		if _, evaluated := inp.Evaluated(); !evaluated {
-			inp.OnUpdate()
-			return
+			return inp.OnUpdate()
 		}
 	}
+	return false
 }
 
 func (e *entradaJanela) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool) {

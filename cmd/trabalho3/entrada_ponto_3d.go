@@ -26,11 +26,10 @@ func (e *entradaPonto3D) Selected(ufpa_cg.Ponto) bool {
 	return false
 }
 
-func (e *entradaPonto3D) OnUpdate() {
+func (e *entradaPonto3D) OnUpdate() bool {
 	for _, inp := range e.entradas() {
 		if _, evaluated := inp.Evaluated(); !evaluated {
-			inp.OnUpdate()
-			return
+			return inp.OnUpdate()
 		}
 	}
 	e.ponto = ufpa_cg.Ponto3D{
@@ -39,6 +38,7 @@ func (e *entradaPonto3D) OnUpdate() {
 		Z: e.entradaZ.valor,
 	}
 	e.ok = true
+	return true
 }
 
 func (e *entradaPonto3D) OnDraw(ufpa_cg.Ponto, int, int, int) (color.Color, bool) {

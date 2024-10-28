@@ -25,7 +25,7 @@ func (e *entradaPontos) Selected(ponto ufpa_cg.Ponto) bool {
 	return false
 }
 
-func (e *entradaPontos) OnUpdate() {
+func (e *entradaPontos) OnUpdate() bool {
 	switch {
 	case repeatingKeyPressed(ebiten.KeyEnter):
 		count := 0
@@ -36,17 +36,20 @@ func (e *entradaPontos) OnUpdate() {
 		}
 		if count >= e.Minimo {
 			e.ok = true
+			return true
 		}
 	default:
 		for i, inp := range e.entradas {
 			if _, evaluated := inp.Evaluated(); !evaluated {
-				inp.OnUpdate()
-				break
-			} else if i == len(e.entradas)-1 {
+				return inp.OnUpdate()
+			}
+			if i == len(e.entradas)-1 {
 				e.entradas = append(e.entradas, new(entradaPonto))
+				return true
 			}
 		}
 	}
+	return false
 }
 
 func (e *entradaPontos) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool) {

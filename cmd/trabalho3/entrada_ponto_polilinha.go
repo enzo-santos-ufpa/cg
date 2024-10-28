@@ -36,14 +36,12 @@ func pnpoly(vertices []ufpa_cg.Ponto, ponto ufpa_cg.Ponto) bool {
 	return inside
 }
 
-func (e *entradaPontoPolilinha) OnUpdate() {
+func (e *entradaPontoPolilinha) OnUpdate() bool {
 	if _, evaluated := e.pontos.Evaluated(); !evaluated {
-		e.pontos.OnUpdate()
-		return
+		return e.pontos.OnUpdate()
 	}
 	if _, evaluated := e.ponto.Evaluated(); !evaluated {
-		e.ponto.OnUpdate()
-		return
+		return e.ponto.OnUpdate()
 	}
 	vertices := make([]ufpa_cg.Ponto, len(e.pontos.entradas)-1)
 	for i, inp := range e.pontos.entradas[:len(e.pontos.entradas)-1] {
@@ -54,6 +52,7 @@ func (e *entradaPontoPolilinha) OnUpdate() {
 	} else {
 		e.ponto.Reset()
 	}
+	return true
 }
 
 func (e *entradaPontoPolilinha) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool) {

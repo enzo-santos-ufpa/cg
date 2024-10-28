@@ -28,20 +28,24 @@ func (e *entradaInteiro) Selected(_ ufpa_cg.Ponto) bool {
 	return false
 }
 
-func (e *entradaInteiro) OnUpdate() {
+func (e *entradaInteiro) OnUpdate() bool {
 	switch {
 	case repeatingKeyPressed(ebiten.KeyDown) &&
 		(!e.PossuiMinimo || e.estado.valorAtual >= e.Minimo):
 		e.estado.valorAtual--
+		return true
 	case repeatingKeyPressed(ebiten.KeyUp) &&
 		(!e.PossuiMaximo || e.estado.valorAtual <= e.Maximo):
 		e.estado.valorAtual++
+		return true
 	case repeatingKeyPressed(ebiten.KeyEnter) &&
 		(!e.PossuiMinimo || e.estado.valorAtual >= e.Minimo) &&
 		(!e.PossuiMaximo || e.estado.valorAtual <= e.Maximo):
 		e.valor = e.estado.valorAtual
 		e.ok = true
+		return true
 	}
+	return false
 }
 
 func (e *entradaInteiro) OnDraw(_ ufpa_cg.Ponto, _, _ int, _ int) (color.Color, bool) {

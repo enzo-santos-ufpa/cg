@@ -26,7 +26,7 @@ func (e *entradaPonto) Selected(ponto ufpa_cg.Ponto) bool {
 	return e.ok && e.ponto == ponto
 }
 
-func (e *entradaPonto) OnUpdate() {
+func (e *entradaPonto) OnUpdate() bool {
 	x, y := ebiten.CursorPosition()
 	e.estado.cursorX = x
 	e.estado.cursorY = y
@@ -34,7 +34,9 @@ func (e *entradaPonto) OnUpdate() {
 	if ponto := e.estado.pontoAtual; inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && ponto != nil {
 		e.ponto = *ponto
 		e.ok = true
+		return true
 	}
+	return false
 }
 
 func (e *entradaPonto) OnDraw(ponto ufpa_cg.Ponto, x, y int, size int) (color.Color, bool) {

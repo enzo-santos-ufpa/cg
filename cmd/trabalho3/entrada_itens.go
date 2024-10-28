@@ -20,15 +20,19 @@ func (e *entradaItens[T]) Selected(_ ufpa_cg.Ponto) bool {
 	return false
 }
 
-func (e *entradaItens[T]) OnUpdate() {
+func (e *entradaItens[T]) OnUpdate() bool {
 	switch {
 	case repeatingKeyPressed(ebiten.KeyDown):
 		e.index = (e.index - 1 + len(e.Itens)) % len(e.Itens)
+		return true
 	case repeatingKeyPressed(ebiten.KeyUp):
 		e.index = (e.index + 1) % len(e.Itens)
+		return true
 	case repeatingKeyPressed(ebiten.KeyEnter):
 		e.ok = true
+		return true
 	}
+	return false
 }
 
 func (e *entradaItens[T]) OnDraw(_ ufpa_cg.Ponto, _, _ int, _ int) (color.Color, bool) {
