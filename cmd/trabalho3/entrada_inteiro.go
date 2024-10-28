@@ -17,6 +17,7 @@ type entradaInteiro struct {
 	PossuiMinimo bool
 	Maximo       int
 	PossuiMaximo bool
+	Sufixo       string
 
 	estado estadoEntradaInteiro
 	valor  int
@@ -48,7 +49,7 @@ func (e *entradaInteiro) OnDraw(_ ufpa_cg.Ponto, _, _ int, _ int) (color.Color, 
 }
 
 func (e *entradaInteiro) DescribeState() (string, bool) {
-	return fmt.Sprintf("%d", e.estado.valorAtual), true
+	return fmt.Sprintf("%d%s", e.estado.valorAtual, e.Sufixo), true
 }
 
 func (e *entradaInteiro) DescribePrompt() string {
@@ -63,7 +64,7 @@ func (e *entradaInteiro) DescribeActions() []AcaoEntrada {
 }
 
 func (e *entradaInteiro) DescribeValue() string {
-	return fmt.Sprintf("%d", e.valor)
+	return fmt.Sprintf("%d%s", e.valor, e.Sufixo)
 }
 
 func (e *entradaInteiro) Evaluated() (map[ufpa_cg.Ponto]color.Color, bool) {

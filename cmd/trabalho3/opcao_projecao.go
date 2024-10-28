@@ -72,6 +72,7 @@ func NewAlgoritmoProjecaoObliqua() AlgoritmoProjecao {
 	return &algoritmoProjecaoObliqua{
 		entradaAnguloInclinacao: &entradaInteiro{
 			Label:        "angulo de inclinação",
+			Sufixo:       "°",
 			PossuiMinimo: true,
 			Minimo:       -360,
 			PossuiMaximo: true,
@@ -79,6 +80,7 @@ func NewAlgoritmoProjecaoObliqua() AlgoritmoProjecao {
 		},
 		entradaFatorCompressao: &entradaInteiro{
 			Label:        "fator de compressão",
+			Sufixo:       "%",
 			PossuiMinimo: true,
 			Minimo:       0,
 			PossuiMaximo: true,

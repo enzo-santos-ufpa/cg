@@ -19,7 +19,8 @@ type algoritmoRotacao struct {
 func NewAlgoritmoTransformacaoRotacao() AlgoritmoTransformacao {
 	return &algoritmoRotacao{
 		entradaAngulo: &entradaInteiro{
-			Label:        "ângulo (º)",
+			Label:        "ângulo",
+			Sufixo:       "°",
 			PossuiMinimo: true,
 			Minimo:       -360,
 			PossuiMaximo: true,
