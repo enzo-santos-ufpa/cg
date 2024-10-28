@@ -63,18 +63,46 @@ func (a *algoritmoProjecaoOrtogonal) Transform(vertices []ufpa_cg.Ponto3D) []ufp
 	return vertices2D
 }
 
-type algoritmoProjecaoObliqua struct{}
+type algoritmoProjecaoObliqua struct {
+	entradaAnguloInclinacao *entradaInteiro
+	entradaFatorCompressao  *entradaInteiro
+}
 
 func NewAlgoritmoProjecaoObliqua() AlgoritmoProjecao {
-	return &algoritmoProjecaoObliqua{}
+	return &algoritmoProjecaoObliqua{
+		entradaAnguloInclinacao: &entradaInteiro{
+			Label:        "angulo de inclinação",
+			PossuiMinimo: true,
+			Minimo:       -360,
+			PossuiMaximo: true,
+			Maximo:       360,
+		},
+		entradaFatorCompressao: &entradaInteiro{
+			Label:        "fator de compressão",
+			PossuiMinimo: true,
+			Minimo:       0,
+			PossuiMaximo: true,
+			Maximo:       100,
+		},
+	}
 }
 
 func (a *algoritmoProjecaoObliqua) EvaluateInputs() []EntradaModulo {
-	return []EntradaModulo{}
+	return []EntradaModulo{a.entradaAnguloInclinacao, a.entradaFatorCompressao}
 }
 
 func (a *algoritmoProjecaoObliqua) Transform(vertices []ufpa_cg.Ponto3D) []ufpa_cg.Ponto {
-	return []ufpa_cg.Ponto{}
+	anguloInclinacao := float64(a.entradaAnguloInclinacao.valor) * math.Pi / 180.0
+	fatorCompressao := float64(a.entradaFatorCompressao.valor) / 100.0
+
+	vertices2D := make([]ufpa_cg.Ponto, len(vertices))
+	for i, vertice := range vertices {
+		vertices2D[i] = ufpa_cg.Ponto{
+			X: int(math.Round(float64(vertice.X) + fatorCompressao*float64(vertice.Z)*math.Cos(anguloInclinacao))),
+			Y: int(math.Round(float64(vertice.Y) + fatorCompressao*float64(vertice.Z)*math.Sin(anguloInclinacao))),
+		}
+	}
+	return vertices2D
 }
 
 type algoritmoProjecaoPerspectiva struct {
