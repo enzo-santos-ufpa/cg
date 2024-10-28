@@ -26,16 +26,23 @@ func (j *JogoSecundario) Update() error {
 	}
 
 	// Seleciona o ponto atual da tela
-	allEvaluated := true
-	for _, inp := range settings.Inputs() {
+	inputs := settings.Inputs()
+	currentInputIndex := -1
+	for i, inp := range inputs {
 		if _, evaluated := inp.Evaluated(); evaluated {
 			continue
 		}
 		inp.OnUpdate()
-		allEvaluated = false
+		currentInputIndex = i
 		break
 	}
-	if allEvaluated {
+	if repeatingKeyPressed(ebiten.KeyBackspace) && currentInputIndex > 0 {
+		inputs[currentInputIndex].Reset()
+		inputs[currentInputIndex-1].Reset()
+		j.output = nil
+		return nil
+	}
+	if currentInputIndex == -1 {
 		// Calcula a reta para as entradas selecionadas
 		if output := j.output; output == nil {
 			j.output = settings.Evaluate()
