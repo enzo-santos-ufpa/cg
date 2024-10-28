@@ -78,20 +78,45 @@ func (a *algoritmoProjecaoObliqua) Transform(vertices []ufpa_cg.Ponto3D) []ufpa_
 }
 
 type algoritmoProjecaoPerspectiva struct {
-	entradaEx *entradaInteiro
-	entradaEy *entradaInteiro
+	entradaCentro *entradaPonto3D
+	entradaPlanoZ *entradaInteiro
 }
 
 func NewAlgoritmoProjecaoPerspectiva() AlgoritmoProjecao {
-	return &algoritmoProjecaoPerspectiva{}
+	return &algoritmoProjecaoPerspectiva{
+		entradaCentro: &entradaPonto3D{
+			Label:    "centro de projeção",
+			entradaX: &entradaInteiro{},
+			entradaY: &entradaInteiro{},
+			entradaZ: &entradaInteiro{},
+		},
+		entradaPlanoZ: &entradaInteiro{Label: "plano de projeção"},
+	}
 }
 
 func (a *algoritmoProjecaoPerspectiva) EvaluateInputs() []EntradaModulo {
-	return []EntradaModulo{}
+	return []EntradaModulo{a.entradaCentro, a.entradaPlanoZ}
 }
 
 func (a *algoritmoProjecaoPerspectiva) Transform(vertices []ufpa_cg.Ponto3D) []ufpa_cg.Ponto {
-	return []ufpa_cg.Ponto{}
+	centro := a.entradaCentro.ponto
+	distanciaZ := a.entradaPlanoZ.valor
+
+	vertices2D := make([]ufpa_cg.Ponto, len(vertices))
+	for i, vertice := range vertices {
+		dx := vertice.X - centro.X
+		dy := vertice.Y - centro.Y
+		dz := vertice.Z - centro.Z
+		if dz == 0 {
+			return []ufpa_cg.Ponto{}
+		}
+		fator := float64(distanciaZ) / float64(dz)
+		vertices2D[i] = ufpa_cg.Ponto{
+			X: int(math.Round(float64(centro.X) + float64(dx)*fator)),
+			Y: int(math.Round(float64(centro.Y) + float64(dy)*fator)),
+		}
+	}
+	return vertices2D
 }
 
 type configuracoesProjetarPoligono3D struct {

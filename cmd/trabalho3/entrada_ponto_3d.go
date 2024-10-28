@@ -70,7 +70,7 @@ func (e *entradaPonto3D) DescribePrompt() string {
 			return fmt.Sprintf("Selecione o eixo %c:", rune(i+'X'))
 		}
 	}
-	return ""
+	return fmt.Sprintf("Selecione o %s:", e.Label)
 }
 
 func (e *entradaPonto3D) DescribeActions() []AcaoEntrada {
