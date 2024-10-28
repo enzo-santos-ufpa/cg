@@ -7,20 +7,17 @@ import (
 )
 
 type configuracoesRecortarLinha struct {
-	pontoA *entradaPonto
-	pontoB *entradaPonto
-	janela *entradaJanela
+	pontoA        *entradaPonto
+	pontoB        *entradaPonto
+	entradaJanela *entradaJanela
 }
 
 func (c *configuracoesRecortarLinha) Inputs() []EntradaModulo {
-	return []EntradaModulo{c.pontoA, c.pontoB, c.janela}
+	return []EntradaModulo{c.pontoA, c.pontoB, c.entradaJanela}
 }
 
 func (c *configuracoesRecortarLinha) Evaluate() []ufpa_cg.Ponto {
-	janela := ufpa_cg.JanelaRecorte{
-		PontoSuperiorEsquerdo: c.janela.entradaPontoSuperiorEsquerdo.ponto,
-		PontoInferiorDireito:  c.janela.entradaPontoInferiorDireito.ponto,
-	}
+	janela := c.entradaJanela.JanelaRecorte()
 	pontoA := c.pontoA.ponto
 	pontoB := c.pontoB.ponto
 	pontos := make([]ufpa_cg.Ponto, 0)
@@ -54,9 +51,9 @@ func (o *opcaoRecortarLinha) Create() ModuloJogo {
 		settings: &configuracoesRecortarLinha{
 			pontoA: &entradaPonto{Label: "ponto A"},
 			pontoB: &entradaPonto{Label: "ponto B"},
-			janela: &entradaJanela{
-				entradaPontoSuperiorEsquerdo: &entradaPonto{},
-				entradaPontoInferiorDireito:  &entradaPonto{},
+			entradaJanela: &entradaJanela{
+				entradaPonto1: &entradaPonto{},
+				entradaPonto2: &entradaPonto{},
 			},
 		},
 	}

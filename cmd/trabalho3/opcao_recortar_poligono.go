@@ -108,8 +108,8 @@ func (c *configuracoesRecortarPoligono) Evaluate() []ufpa_cg.Ponto {
 		vertices[i] = inp.ponto
 	}
 	janela := JanelaRecorte(ufpa_cg.JanelaRecorte{
-		PontoSuperiorEsquerdo: c.janela.entradaPontoSuperiorEsquerdo.ponto,
-		PontoInferiorDireito:  c.janela.entradaPontoInferiorDireito.ponto,
+		PontoSuperiorEsquerdo: c.janela.entradaPonto1.ponto,
+		PontoInferiorDireito:  c.janela.entradaPonto2.ponto,
 	})
 	vertices2 := janela.CalculaIntersecaoPoligono(vertices)
 
@@ -149,8 +149,8 @@ func (o *opcaoRecortarPoligono) Create() ModuloJogo {
 		settings: &configuracoesRecortarPoligono{
 			pontos: &entradaPontos{Minimo: 3, entradas: []*entradaPonto{new(entradaPonto)}},
 			janela: &entradaJanela{
-				entradaPontoSuperiorEsquerdo: &entradaPonto{},
-				entradaPontoInferiorDireito:  &entradaPonto{},
+				entradaPonto1: &entradaPonto{},
+				entradaPonto2: &entradaPonto{},
 			},
 		},
 	}
