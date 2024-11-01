@@ -28,7 +28,7 @@ const (
 
 type JanelaRecorte ufpa_cg.JanelaRecorte
 
-func (j *JanelaRecorte) intersectionPoint(p1, p2 ufpa_cg.Ponto, aresta TipoAresta) ufpa_cg.Ponto {
+func (j *JanelaRecorte) intersect(p1, p2 ufpa_cg.Ponto, aresta TipoAresta) ufpa_cg.Ponto {
 	switch aresta {
 	case ArestaEsquerda, ArestaDireita:
 		var x int
@@ -44,9 +44,9 @@ func (j *JanelaRecorte) intersectionPoint(p1, p2 ufpa_cg.Ponto, aresta TipoArest
 	case ArestaInferior, ArestaSuperior:
 		var y int
 		if aresta == ArestaInferior {
-			y = j.PontoSuperiorEsquerdo.Y
-		} else {
 			y = j.PontoInferiorDireito.Y
+		} else {
+			y = j.PontoSuperiorEsquerdo.Y
 		}
 		return ufpa_cg.Ponto{
 			X: int(math.Round(float64(p1.X) + float64(p2.X-p1.X)*float64(y-p1.Y)/float64(p2.Y-p1.Y))),
@@ -70,36 +70,32 @@ func (j *JanelaRecorte) contains(ponto ufpa_cg.Ponto, aresta TipoAresta) bool {
 	panic(fmt.Sprintf("unexpected value for `aresta`: %v", aresta))
 }
 
-// TODO Make it work
-
 func (j *JanelaRecorte) CalculaIntersecaoPoligono(vertices []ufpa_cg.Ponto) []ufpa_cg.Ponto {
-
-	pontos := make([]ufpa_cg.Ponto, len(vertices))
+	poligono := make([]ufpa_cg.Ponto, len(vertices))
 	for i, vertice := range vertices {
-		pontos[i] = vertice
+		poligono[i] = vertice
 	}
 
 	for _, aresta := range []TipoAresta{ArestaEsquerda, ArestaDireita, ArestaInferior, ArestaSuperior} {
-		pontosAresta := make([]ufpa_cg.Ponto, 0)
-		p1 := pontos[len(pontos)-1]
-		for _, p2 := range pontos {
-			if j.contains(p2, aresta) {
-				if !j.contains(p1, aresta) {
-					pontosAresta = append(pontosAresta, j.intersectionPoint(p1, p2, aresta))
+		subPoligono := make([]ufpa_cg.Ponto, 0)
+		for i, ponto1 := range poligono {
+			ponto2 := poligono[(i+1)%len(poligono)]
+			if j.contains(ponto1, aresta) {
+				if j.contains(ponto2, aresta) {
+					subPoligono = append(subPoligono, ponto2)
+				} else {
+					subPoligono = append(subPoligono, j.intersect(ponto1, ponto2, aresta))
 				}
-				pontosAresta = append(pontosAresta, p2)
-			} else if j.contains(p1, aresta) {
-				pontosAresta = append(pontosAresta, j.intersectionPoint(p1, p2, aresta))
+			} else if j.contains(ponto2, aresta) {
+				subPoligono = append(subPoligono, j.intersect(ponto1, ponto2, aresta), ponto2)
 			}
-			p1 = p2
 		}
-
-		pontos = make([]ufpa_cg.Ponto, len(pontosAresta))
-		for i, ponto := range pontosAresta {
-			pontos[i] = ponto
+		poligono = make([]ufpa_cg.Ponto, len(subPoligono))
+		for i, ponto := range subPoligono {
+			poligono[i] = ponto
 		}
 	}
-	return pontos
+	return poligono
 }
 
 func (c *configuracoesRecortarPoligono) Evaluate() []ufpa_cg.Ponto {
@@ -107,10 +103,7 @@ func (c *configuracoesRecortarPoligono) Evaluate() []ufpa_cg.Ponto {
 	for i, inp := range c.pontos.entradas[:len(c.pontos.entradas)-1] {
 		vertices[i] = inp.ponto
 	}
-	janela := JanelaRecorte(ufpa_cg.JanelaRecorte{
-		PontoSuperiorEsquerdo: c.janela.entradaPonto1.ponto,
-		PontoInferiorDireito:  c.janela.entradaPonto2.ponto,
-	})
+	janela := JanelaRecorte(c.janela.JanelaRecorte())
 	vertices2 := janela.CalculaIntersecaoPoligono(vertices)
 
 	borda := make([]ufpa_cg.Ponto, 0)
